@@ -4,23 +4,54 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kukoro Dungeon Raid Tool</title>
+
   <style>
     body {
       margin: 0;
+      font-family: Arial, sans-serif;
       background: #0e0e10;
       color: white;
-      font-family: Arial, sans-serif;
     }
 
     header {
-      padding: 10px 20px;
+      padding: 12px;
       background: #18181b;
       text-align: center;
       font-size: 18px;
+      font-weight: bold;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background: #1f1f23;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      background: #9146ff;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #7a3dd6;
     }
 
     .chat-container {
-      height: calc(100vh - 50px);
+      height: calc(100vh - 110px);
     }
 
     iframe {
@@ -28,21 +59,61 @@
       height: 100%;
       border: none;
     }
+
+    .hint {
+      padding: 5px 10px;
+      font-size: 12px;
+      opacity: 0.7;
+      background: #1f1f23;
+    }
   </style>
 </head>
+
 <body>
 
 <header>
-  Kukoro Dungeon Raid Tool
+  🧙 Kukoro Dungeon Raid Tool
 </header>
 
-<div class="chat-container">
-  <iframe
-    src="https://www.twitch.tv/embed/YOUR_CHANNEL_NAME/chat?parent=YOUR_GITHUB_USERNAME.github.io"
-    height="100%"
-    width="100%">
-  </iframe>
+<div class="controls">
+  <input id="channelInput" placeholder="Enter Twitch channel (e.g. ninja)" />
+  <button onclick="loadChat()">Load Chat</button>
 </div>
+
+<div class="hint">
+  Tip: Press Enter to load chat
+</div>
+
+<div class="chat-container">
+  <iframe id="chatFrame"></iframe>
+</div>
+
+<script>
+  // IMPORTANT: must match GitHub Pages domain exactly
+  const GITHUB_PAGES_DOMAIN = "langopatrik.github.io";
+
+  function loadChat() {
+    const channel = document.getElementById("channelInput").value.trim();
+    if (!channel) return;
+
+    const iframe = document.getElementById("chatFrame");
+
+    iframe.src =
+      "https://www.twitch.tv/embed/" +
+      channel +
+      "/chat?parent=" +
+      GITHUB_PAGES_DOMAIN;
+  }
+
+  // Allow Enter key to load chat
+  document.getElementById("channelInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") loadChat();
+  });
+
+  // Optional default channel (uncomment if you want)
+  // document.getElementById("channelInput").value = "ninja";
+  // loadChat();
+</script>
 
 </body>
 </html>
