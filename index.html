@@ -75,7 +75,7 @@
 <body>
 
 <header>
-  🧙 Kukoro Dungeon Raid Tool (Filtered Chat Mode)
+  🧙 Kukoro Dungeon Raid Tool
 </header>
 
 <div class="controls">
@@ -114,17 +114,21 @@ function connect() {
       const username = userMatch ? userMatch[1] : "Unknown";
       const text = textMatch ? textMatch[1] : "";
 
-      //FILTER: only show messages starting with [KUKORO]
-      if (text.startsWith("[KUKORO]")) {
+      // FIX: robust KUKORO message parsing (handles hidden IRC chars)
+      const cleanedText = text.replace(/\u0001/g, "").trim();
 
-        const cleaned = text.replace("[KUKORO]", "").trim();
+      if (cleanedText.includes("[KUKORO]")) {
+
+        const cleaned = cleanedText
+          .replace("[KUKORO]", "")
+          .trim();
 
         const div = document.createElement("div");
         div.className = "msg";
 
         div.innerHTML = `
           <span class="tag">[KUKORO]</span>
-          <span class="name"> ${username}</span>: ${cleaned}
+          <span class="name">${username}</span>: ${cleaned}
         `;
 
         chatBox.appendChild(div);
