@@ -766,15 +766,15 @@
 
   <div class="title-bar">
     <div class="mark"></div>
-    <h1>Kukoro Dungeon Raid Player Data Tool</h1>
+    <h1 data-i18n="app_title">Kukoro Dungeon Raid Player Data Tool</h1>
     <div class="sub" id="statusText">disconnected</div>
-    <button class="icon-btn" onclick="toggleSidebar()" title="Toggle sidebar" aria-label="Toggle sidebar">
+    <button class="icon-btn" onclick="toggleSidebar()" title="Toggle sidebar" aria-label="Toggle sidebar" data-i18n-title="toggle_sidebar_title" data-i18n-aria="toggle_sidebar_title">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="4" width="18" height="16" rx="2"></rect>
         <line x1="9" y1="4" x2="9" y2="20"></line>
       </svg>
     </button>
-    <button class="icon-btn" onclick="openSettings()" title="Settings" aria-label="Settings">
+    <button class="icon-btn" onclick="openSettings()" title="Settings" aria-label="Settings" data-i18n-title="settings_title" data-i18n-aria="settings_title">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3"></circle>
         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -788,19 +788,19 @@
     <div class="sidebar">
 
       <div class="section">
-        <div class="field-label">Twitch Channel</div>
-        <input id="channelInput" type="text" placeholder="channel name">
-        <button class="primary" onclick="connect()">Connect Chat</button>
+        <div class="field-label" data-i18n="twitch_channel_label">Twitch Channel</div>
+        <input id="channelInput" type="text" placeholder="channel name" data-i18n-placeholder="channel_placeholder">
+        <button class="primary" onclick="connect()" data-i18n="connect_chat_btn">Connect Chat</button>
         <div class="button-row">
-          <button class="danger" onclick="disconnect()">Disconnect</button>
-          <button class="danger" onclick="resetTool()">Clear</button>
+          <button class="danger" onclick="disconnect()" data-i18n="disconnect_btn">Disconnect</button>
+          <button class="danger" onclick="resetTool()" data-i18n="clear_btn">Clear</button>
         </div>
       </div>
 
       <div class="section">
-        <div class="field-label">Boss Type</div>
+        <div class="field-label" data-i18n="boss_type_label">Boss Type</div>
         <select id="bossTypeSelect" onchange="onBossTypeSelectChange()">
-          <option value="">Select a boss...</option>
+          <option value="" data-i18n="select_boss_option">Select a boss...</option>
           <option value="Bat">Bat</option>
           <option value="Cyclops">Cyclops</option>
           <option value="Dragon">Dragon</option>
@@ -819,20 +819,20 @@
           <option value="WereWolf">WereWolf</option>
           <option value="Wolf">Wolf</option>
           <option value="Zombie">Zombie</option>
-          <option value="__custom__">Other (type your own)...</option>
+          <option value="__custom__" data-i18n="boss_custom_option">Other (type your own)...</option>
         </select>
-        <input id="bossTypeCustomInput" type="text" placeholder="Enter custom boss type" style="display:none;">
+        <input id="bossTypeCustomInput" type="text" placeholder="Enter custom boss type" style="display:none;" data-i18n-placeholder="boss_custom_placeholder">
 
-        <div class="field-label" style="margin-top:10px;">Dungeon Level</div>
-        <input id="dungeonLevelInput" type="number" min="1" step="1" placeholder="e.g. 5">
+        <div class="field-label" style="margin-top:10px;" data-i18n="dungeon_level_label">Dungeon Level</div>
+        <input id="dungeonLevelInput" type="number" min="1" step="1" placeholder="e.g. 5" data-i18n-placeholder="dungeon_level_placeholder">
 
-        <button onclick="setBossType()">Set</button>
+        <button onclick="setBossType()" data-i18n="set_btn">Set</button>
       </div>
 
       <div class="section">
-        <div class="field-label">Player Data</div>
-        <textarea id="playerDataInput" placeholder="Paste raid messages, one per line..."></textarea>
-        <button class="ghost" style="background:rgba(124,92,255,0.1)" onclick="addPlayersFromTextarea()">Add Players</button>
+        <div class="field-label" data-i18n="player_data_label">Player Data</div>
+        <textarea id="playerDataInput" placeholder="Paste raid messages, one per line..." data-i18n-placeholder="player_data_placeholder"></textarea>
+        <button class="ghost" style="background:rgba(124,92,255,0.1)" onclick="addPlayersFromTextarea()" data-i18n="add_players_btn">Add Players</button>
 
       </div>
 
@@ -841,8 +841,8 @@
     <!-- MAIN CONTENT -->
     <div class="content">
       <div class="tabs">
-        <button class="tab-btn active" id="tabBtnChat" onclick="switchTab('chat')">Chat</button>
-        <button class="tab-btn" id="tabBtnBoard" onclick="switchTab('board')">Board</button>
+        <button class="tab-btn active" id="tabBtnChat" onclick="switchTab('chat')" data-i18n="tab_chat">Chat</button>
+        <button class="tab-btn" id="tabBtnBoard" onclick="switchTab('board')" data-i18n="tab_board">Board</button>
       </div>
 
       <div id="chatPanel" class="panel active">
@@ -852,21 +852,21 @@
       <div id="boardPanel" class="panel">
         <div id="bossTypeDisplay" class="boss-type-display" style="display:none;">
           <span id="bossTypeGroup" style="display:inline-flex; align-items:center; gap:8px;">
-            <span class="field-label" style="margin:0;">Boss</span>
+            <span class="field-label" style="margin:0;" data-i18n="boss_label">Boss</span>
             <span id="bossTypeValue"></span>
           </span>
           <span id="dungeonLevelDisplay" style="display:none; align-items:center; gap:8px;">
-            <span class="field-label" style="margin:0 0 0 10px;">Dungeon Level</span>
+            <span class="field-label" style="margin:0 0 0 10px;" data-i18n="dungeon_level_label">Dungeon Level</span>
             <span id="dungeonLevelValue"></span>
           </span>
         </div>
         <div class="board-header">
-          <div class="sort-header" id="sortHeader-name" onclick="toggleSort('name')">Players <span id="playerCount"></span><span class="sort-arrow"></span></div>
-          <div class="sort-header" id="sortHeader-level" onclick="toggleSort('level')">Level<span class="sort-arrow"></span></div>
-          <div>Stats</div>
-          <div class="sort-header" id="sortHeader-role" onclick="toggleSort('role')">Role<span class="sort-arrow"></span></div>
-          <div class="sort-header" id="sortHeader-focus" onclick="toggleSort('focus')">Focus<span class="sort-arrow"></span></div>
-          <div>Skills</div>
+          <div class="sort-header" id="sortHeader-name" onclick="toggleSort('name')"><span data-i18n="header_players">Players</span> <span id="playerCount"></span><span class="sort-arrow"></span></div>
+          <div class="sort-header" id="sortHeader-level" onclick="toggleSort('level')"><span data-i18n="header_level">Level</span><span class="sort-arrow"></span></div>
+          <div data-i18n="header_stats">Stats</div>
+          <div class="sort-header" id="sortHeader-role" onclick="toggleSort('role')"><span data-i18n="header_role">Role</span><span class="sort-arrow"></span></div>
+          <div class="sort-header" id="sortHeader-focus" onclick="toggleSort('focus')"><span data-i18n="header_focus">Focus</span><span class="sort-arrow"></span></div>
+          <div data-i18n="header_skills">Skills</div>
         </div>
         <div id="board" class="board"></div>
       </div>
@@ -874,7 +874,7 @@
 
   </div>
 
-  <div class="footer">
+  <div class="footer" data-i18n-html="footer_html">
     See "<a href="#" onclick="readMe(); return false;">Read Me</a>" for Copyright &amp; Permissions.
   </div>
 
@@ -884,8 +884,8 @@
 <div class="modal-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
   <div class="modal">
     <div class="modal-header">
-      <h2>Settings</h2>
-      <button class="icon-btn" onclick="closeSettings()" aria-label="Close settings">
+      <h2 data-i18n="settings_title">Settings</h2>
+      <button class="icon-btn" onclick="closeSettings()" aria-label="Close settings" data-i18n-aria="close_settings_aria">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -894,12 +894,12 @@
     </div>
 
     <div class="section">
-      <div class="field-label">Theme</div>
-      <button onclick="toggleDarkMode()">Toggle Theme</button>
+      <div class="field-label" data-i18n="theme_label">Theme</div>
+      <button onclick="toggleDarkMode()" data-i18n="toggle_theme_btn">Toggle Theme</button>
     </div>
 
     <div class="section">
-      <div class="field-label">Language</div>
+      <div class="field-label" data-i18n="language_label">Language</div>
       <select id="languageSelect" onchange="changeLanguage(this.value)">
         <option value="en">English</option>
         <option value="es">Español</option>
@@ -913,6 +913,327 @@
 
 <script src="patterns.js"></script>
 <script>
+// ---- i18n dictionary & engine ----
+// Covers every piece of UI chrome (labels, buttons, placeholders, tooltips,
+// headers, alerts, status text) across all 5 languages in the Settings >
+// Language dropdown. Deliberately NOT translated: player-entered data
+// (names/stats/skills) and the Boss Type creature list — those are tied to
+// the raid-message parsing patterns in patterns.js, so changing their text
+// here would desync them from what the parser actually matches.
+const I18N = {
+  en: {
+    app_title: "Kukoro Dungeon Raid Player Data Tool",
+    settings_title: "Settings",
+    theme_label: "Theme",
+    toggle_theme_btn: "Toggle Theme",
+    language_label: "Language",
+    toggle_sidebar_title: "Toggle sidebar",
+    close_settings_aria: "Close settings",
+    twitch_channel_label: "Twitch Channel",
+    channel_placeholder: "channel name",
+    connect_chat_btn: "Connect Chat",
+    disconnect_btn: "Disconnect",
+    clear_btn: "Clear",
+    boss_type_label: "Boss Type",
+    select_boss_option: "Select a boss...",
+    boss_custom_option: "Other (type your own)...",
+    boss_custom_placeholder: "Enter custom boss type",
+    dungeon_level_label: "Dungeon Level",
+    dungeon_level_placeholder: "e.g. 5",
+    set_btn: "Set",
+    player_data_label: "Player Data",
+    player_data_placeholder: "Paste raid messages, one per line...",
+    add_players_btn: "Add Players",
+    tab_chat: "Chat",
+    tab_board: "Board",
+    boss_label: "Boss",
+    header_players: "Players",
+    header_level: "Level",
+    header_stats: "Stats",
+    header_role: "Role",
+    header_focus: "Focus",
+    header_skills: "Skills",
+    footer_html: 'See "<a href="#" onclick="readMe(); return false;">Read Me</a>" for Copyright &amp; Permissions.',
+    edit_player_title: "Edit player",
+    remove_player_title: "Remove player",
+    add_player_trigger: "Add Player",
+    unknown_focus: "Unknown",
+    save_btn: "Save",
+    cancel_btn: "Cancel",
+    player_name_placeholder: "Player name",
+    level_placeholder: "Level",
+    stats_placeholder: "Stats",
+    role_placeholder: "Role",
+    focus_placeholder: "Focus",
+    skills_placeholder: "Skills, one per line...",
+    status_disconnected: "disconnected",
+    status_connecting: "connecting to #{channel}…",
+    status_connected: "connected — #{channel}",
+    status_dropped: "disconnected (connection dropped)",
+    theme_alert: "This tool now ships dark by default — light mode coming soon.",
+    readme_alert: "Kukoro Dungeon Raid Tool - Read Me placeholder",
+    skill_placeholder_title: "Placeholder — waiting for full stats",
+    skill_highlight_title: "Click to highlight red/green",
+    name_highlight_title: "{name} — Click to highlight red/green"
+  },
+  es: {
+    app_title: "Herramienta de Datos de Jugadores - Kukoro Dungeon Raid",
+    settings_title: "Configuración",
+    theme_label: "Tema",
+    toggle_theme_btn: "Cambiar Tema",
+    language_label: "Idioma",
+    toggle_sidebar_title: "Mostrar/ocultar barra lateral",
+    close_settings_aria: "Cerrar configuración",
+    twitch_channel_label: "Canal de Twitch",
+    channel_placeholder: "nombre del canal",
+    connect_chat_btn: "Conectar Chat",
+    disconnect_btn: "Desconectar",
+    clear_btn: "Borrar",
+    boss_type_label: "Tipo de Jefe",
+    select_boss_option: "Selecciona un jefe...",
+    boss_custom_option: "Otro (escribe el tuyo)...",
+    boss_custom_placeholder: "Escribe el tipo de jefe",
+    dungeon_level_label: "Nivel de Mazmorra",
+    dungeon_level_placeholder: "p. ej. 5",
+    set_btn: "Aplicar",
+    player_data_label: "Datos de Jugadores",
+    player_data_placeholder: "Pega los mensajes de la redada, uno por línea...",
+    add_players_btn: "Añadir Jugadores",
+    tab_chat: "Chat",
+    tab_board: "Tablero",
+    boss_label: "Jefe",
+    header_players: "Jugadores",
+    header_level: "Nivel",
+    header_stats: "Estadísticas",
+    header_role: "Rol",
+    header_focus: "Objetivo",
+    header_skills: "Habilidades",
+    footer_html: 'Consulta el "<a href="#" onclick="readMe(); return false;">Léeme</a>" para Derechos de Autor y Permisos.',
+    edit_player_title: "Editar jugador",
+    remove_player_title: "Eliminar jugador",
+    add_player_trigger: "Añadir Jugador",
+    unknown_focus: "Desconocido",
+    save_btn: "Guardar",
+    cancel_btn: "Cancelar",
+    player_name_placeholder: "Nombre del jugador",
+    level_placeholder: "Nivel",
+    stats_placeholder: "Estadísticas",
+    role_placeholder: "Rol",
+    focus_placeholder: "Objetivo",
+    skills_placeholder: "Habilidades, una por línea...",
+    status_disconnected: "desconectado",
+    status_connecting: "conectando a #{channel}…",
+    status_connected: "conectado — #{channel}",
+    status_dropped: "desconectado (conexión perdida)",
+    theme_alert: "Esta herramienta ahora viene en modo oscuro por defecto — el modo claro llegará pronto.",
+    readme_alert: "Herramienta Kukoro Dungeon Raid - Marcador de posición Léeme",
+    skill_placeholder_title: "Marcador de posición — esperando estadísticas completas",
+    skill_highlight_title: "Haz clic para resaltar en rojo/verde",
+    name_highlight_title: "{name} — Haz clic para resaltar en rojo/verde"
+  },
+  fr: {
+    app_title: "Outil de Données des Joueurs - Kukoro Dungeon Raid",
+    settings_title: "Paramètres",
+    theme_label: "Thème",
+    toggle_theme_btn: "Changer de Thème",
+    language_label: "Langue",
+    toggle_sidebar_title: "Afficher/masquer la barre latérale",
+    close_settings_aria: "Fermer les paramètres",
+    twitch_channel_label: "Chaîne Twitch",
+    channel_placeholder: "nom de la chaîne",
+    connect_chat_btn: "Connecter le Chat",
+    disconnect_btn: "Déconnecter",
+    clear_btn: "Effacer",
+    boss_type_label: "Type de Boss",
+    select_boss_option: "Sélectionnez un boss...",
+    boss_custom_option: "Autre (saisissez le vôtre)...",
+    boss_custom_placeholder: "Saisissez le type de boss",
+    dungeon_level_label: "Niveau du Donjon",
+    dungeon_level_placeholder: "p. ex. 5",
+    set_btn: "Définir",
+    player_data_label: "Données des Joueurs",
+    player_data_placeholder: "Collez les messages du raid, un par ligne...",
+    add_players_btn: "Ajouter des Joueurs",
+    tab_chat: "Chat",
+    tab_board: "Tableau",
+    boss_label: "Boss",
+    header_players: "Joueurs",
+    header_level: "Niveau",
+    header_stats: "Stats",
+    header_role: "Rôle",
+    header_focus: "Cible",
+    header_skills: "Compétences",
+    footer_html: 'Consultez le "<a href="#" onclick="readMe(); return false;">Lisez-moi</a>" pour les droits d\'auteur et autorisations.',
+    edit_player_title: "Modifier le joueur",
+    remove_player_title: "Supprimer le joueur",
+    add_player_trigger: "Ajouter un Joueur",
+    unknown_focus: "Inconnu",
+    save_btn: "Enregistrer",
+    cancel_btn: "Annuler",
+    player_name_placeholder: "Nom du joueur",
+    level_placeholder: "Niveau",
+    stats_placeholder: "Stats",
+    role_placeholder: "Rôle",
+    focus_placeholder: "Cible",
+    skills_placeholder: "Compétences, une par ligne...",
+    status_disconnected: "déconnecté",
+    status_connecting: "connexion à #{channel}…",
+    status_connected: "connecté — #{channel}",
+    status_dropped: "déconnecté (connexion perdue)",
+    theme_alert: "Cet outil est désormais sombre par défaut — le mode clair arrive bientôt.",
+    readme_alert: "Outil Kukoro Dungeon Raid - Espace réservé Lisez-moi",
+    skill_placeholder_title: "Espace réservé — en attente des stats complètes",
+    skill_highlight_title: "Cliquez pour surligner en rouge/vert",
+    name_highlight_title: "{name} — Cliquez pour surligner en rouge/vert"
+  },
+  de: {
+    app_title: "Kukoro Dungeon Raid Spielerdaten-Tool",
+    settings_title: "Einstellungen",
+    theme_label: "Design",
+    toggle_theme_btn: "Design Wechseln",
+    language_label: "Sprache",
+    toggle_sidebar_title: "Seitenleiste ein-/ausblenden",
+    close_settings_aria: "Einstellungen schließen",
+    twitch_channel_label: "Twitch-Kanal",
+    channel_placeholder: "Kanalname",
+    connect_chat_btn: "Chat Verbinden",
+    disconnect_btn: "Trennen",
+    clear_btn: "Löschen",
+    boss_type_label: "Bosstyp",
+    select_boss_option: "Boss auswählen...",
+    boss_custom_option: "Andere (eigenen Namen eingeben)...",
+    boss_custom_placeholder: "Eigenen Bosstyp eingeben",
+    dungeon_level_label: "Dungeon-Stufe",
+    dungeon_level_placeholder: "z. B. 5",
+    set_btn: "Übernehmen",
+    player_data_label: "Spielerdaten",
+    player_data_placeholder: "Raid-Nachrichten einfügen, eine pro Zeile...",
+    add_players_btn: "Spieler Hinzufügen",
+    tab_chat: "Chat",
+    tab_board: "Tafel",
+    boss_label: "Boss",
+    header_players: "Spieler",
+    header_level: "Stufe",
+    header_stats: "Werte",
+    header_role: "Rolle",
+    header_focus: "Fokus",
+    header_skills: "Fähigkeiten",
+    footer_html: 'Siehe "<a href="#" onclick="readMe(); return false;">Liesmich</a>" für Urheberrecht &amp; Berechtigungen.',
+    edit_player_title: "Spieler bearbeiten",
+    remove_player_title: "Spieler entfernen",
+    add_player_trigger: "Spieler Hinzufügen",
+    unknown_focus: "Unbekannt",
+    save_btn: "Speichern",
+    cancel_btn: "Abbrechen",
+    player_name_placeholder: "Spielername",
+    level_placeholder: "Stufe",
+    stats_placeholder: "Werte",
+    role_placeholder: "Rolle",
+    focus_placeholder: "Fokus",
+    skills_placeholder: "Fähigkeiten, eine pro Zeile...",
+    status_disconnected: "getrennt",
+    status_connecting: "Verbinde mit #{channel}…",
+    status_connected: "verbunden — #{channel}",
+    status_dropped: "getrennt (Verbindung unterbrochen)",
+    theme_alert: "Dieses Tool ist jetzt standardmäßig dunkel — der helle Modus folgt bald.",
+    readme_alert: "Kukoro Dungeon Raid Tool - Liesmich-Platzhalter",
+    skill_placeholder_title: "Platzhalter — wartet auf vollständige Werte",
+    skill_highlight_title: "Klicken zum Markieren in Rot/Grün",
+    name_highlight_title: "{name} — Klicken zum Markieren in Rot/Grün"
+  },
+  ja: {
+    app_title: "Kukoro ダンジョンレイド プレイヤーデータツール",
+    settings_title: "設定",
+    theme_label: "テーマ",
+    toggle_theme_btn: "テーマを切り替え",
+    language_label: "言語",
+    toggle_sidebar_title: "サイドバーの表示切替",
+    close_settings_aria: "設定を閉じる",
+    twitch_channel_label: "Twitchチャンネル",
+    channel_placeholder: "チャンネル名",
+    connect_chat_btn: "チャットに接続",
+    disconnect_btn: "切断",
+    clear_btn: "クリア",
+    boss_type_label: "ボスタイプ",
+    select_boss_option: "ボスを選択...",
+    boss_custom_option: "その他（自分で入力）...",
+    boss_custom_placeholder: "ボスタイプを入力",
+    dungeon_level_label: "ダンジョンレベル",
+    dungeon_level_placeholder: "例：5",
+    set_btn: "設定する",
+    player_data_label: "プレイヤーデータ",
+    player_data_placeholder: "レイドメッセージを1行ずつ貼り付け...",
+    add_players_btn: "プレイヤーを追加",
+    tab_chat: "チャット",
+    tab_board: "ボード",
+    boss_label: "ボス",
+    header_players: "プレイヤー",
+    header_level: "レベル",
+    header_stats: "ステータス",
+    header_role: "役割",
+    header_focus: "フォーカス",
+    header_skills: "スキル",
+    footer_html: '著作権と使用許可については「<a href="#" onclick="readMe(); return false;">Read Me</a>」をご覧ください。',
+    edit_player_title: "プレイヤーを編集",
+    remove_player_title: "プレイヤーを削除",
+    add_player_trigger: "プレイヤーを追加",
+    unknown_focus: "不明",
+    save_btn: "保存",
+    cancel_btn: "キャンセル",
+    player_name_placeholder: "プレイヤー名",
+    level_placeholder: "レベル",
+    stats_placeholder: "ステータス",
+    role_placeholder: "役割",
+    focus_placeholder: "フォーカス",
+    skills_placeholder: "スキルを1行ずつ入力...",
+    status_disconnected: "切断済み",
+    status_connecting: "#{channel} に接続中…",
+    status_connected: "接続済み — #{channel}",
+    status_dropped: "切断（接続が失われました）",
+    theme_alert: "このツールは現在デフォルトでダークモードです — ライトモードは近日公開予定です。",
+    readme_alert: "Kukoro ダンジョンレイドツール - Read Me（仮）",
+    skill_placeholder_title: "プレースホルダー — 完全なステータス待ち",
+    skill_highlight_title: "クリックして赤/緑でハイライト",
+    name_highlight_title: "{name} — クリックして赤/緑でハイライト"
+  }
+};
+
+let currentLang = "en";
+
+// Looks up `key` in the active language, falling back to English if the
+// key or language is missing (so an incomplete dictionary never blanks the
+// UI), and substitutes any {placeholder} tokens from `vars`.
+function t(key, vars) {
+  const dict = I18N[currentLang] || I18N.en;
+  let str = dict[key] !== undefined ? dict[key] : I18N.en[key];
+  if (str === undefined) return key;
+  if (vars) {
+    Object.keys(vars).forEach(k => {
+      str = str.replace(new RegExp("\\{" + k + "\\}", "g"), vars[k]);
+    });
+  }
+  return str;
+}
+
+// Walks every element tagged with a data-i18n* attribute and swaps in the
+// translation for the active language, then refreshes the pieces of the UI
+// that are built dynamically in JS (status line, board rows) rather than
+// sitting as static markup, so a language switch mid-session updates
+// everything on screen immediately.
+function applyLanguage(lang) {
+  currentLang = I18N[lang] ? lang : "en";
+  document.documentElement.lang = currentLang;
+
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+  document.querySelectorAll("[data-i18n-title]").forEach(el => { el.title = t(el.dataset.i18nTitle); });
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => { el.setAttribute("aria-label", t(el.dataset.i18nAria)); });
+
+  updateStatusText();
+  renderBoard();
+}
+
 let ws;
 let manualDisconnect = false;
 let participants = new Map(); // name -> { stats, role, skills }
@@ -920,6 +1241,22 @@ const MAX_PLAYERS = 16;
 let sortMode = "name-asc";
 let addingRow = false;
 let editingName = null;
+
+// Tracks connection state independently of the status line's text so that
+// switching languages mid-session can redraw the same state ("connected to
+// #foo", "connecting…", etc.) in the new language instead of freezing
+// whatever English (or other) string happened to be on screen already.
+let connectionState = { status: "disconnected", channel: "" };
+
+function updateStatusText() {
+  const el = document.getElementById("statusText");
+  if (!el) return;
+  const { status, channel } = connectionState;
+  if (status === "connecting") el.textContent = t("status_connecting", { channel });
+  else if (status === "connected") el.textContent = t("status_connected", { channel });
+  else if (status === "dropped") el.textContent = t("status_dropped");
+  else el.textContent = t("status_disconnected");
+}
 
 /* ORIGINAL CHAT LOGIC (UNCHANGED) */
 function connect() {
@@ -937,7 +1274,8 @@ function connect() {
   manualDisconnect = false;
 
   const chatBox = document.getElementById("chat");
-  document.getElementById("statusText").textContent = "connecting to #" + channel + "…";
+  connectionState = { status: "connecting", channel };
+  updateStatusText();
 
   ws = new WebSocket("wss://irc-ws.chat.twitch.tv:443");
 
@@ -945,12 +1283,14 @@ function connect() {
     ws.send("CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership");
     ws.send("NICK justinfan" + Math.floor(Math.random() * 100000));
     ws.send("JOIN #" + channel);
-    document.getElementById("statusText").textContent = "connected — #" + channel;
+    connectionState = { status: "connected", channel };
+    updateStatusText();
   };
 
   ws.onclose = () => {
     if (!manualDisconnect) {
-      document.getElementById("statusText").textContent = "disconnected (connection dropped)";
+      connectionState = { status: "dropped", channel: "" };
+      updateStatusText();
     }
     manualDisconnect = false;
   };
@@ -1280,14 +1620,15 @@ function getLevelClass(level) {
 }
 
 function disconnect() {
+  connectionState = { status: "disconnected", channel: "" };
   if (!ws) {
-    document.getElementById("statusText").textContent = "disconnected";
+    updateStatusText();
     return;
   }
   manualDisconnect = true;
   ws.close();
   ws = null;
-  document.getElementById("statusText").textContent = "disconnected";
+  updateStatusText();
 }
 
 /* BUTTON FUNCTIONS */
@@ -1441,7 +1782,7 @@ function renderBoard() {
           const highlightClass = isFocusPlaceholder
             ? " skill-yellow"
             : s.highlight === "red" ? " skill-red" : s.highlight === "green" ? " skill-green" : "";
-          const title = isFocusPlaceholder ? "Placeholder — waiting for full stats" : "Click to highlight red/green";
+          const title = isFocusPlaceholder ? t("skill_placeholder_title") : t("skill_highlight_title");
           return `<div class="skill-item${highlightClass}" data-name="${escapeHtml(name)}" data-index="${i}" title="${title}"><span class="skill-num">${i + 1}.</span>${escapeHtml(s.text)}</div>`;
         }).join("")
       : "—";
@@ -1451,11 +1792,11 @@ function renderBoard() {
     const focusClass = data.focus ? (isMixedFocus ? " mixed-focus" : " has-focus") : "";
 
     row.innerHTML = `
-      <div class="player-name${nameHighlightClass}" data-name="${escapeHtml(name)}" title="${escapeHtml(name)} — Click to highlight red/green">${escapeHtml(name)}</div>
+      <div class="player-name${nameHighlightClass}" data-name="${escapeHtml(name)}" title="${escapeHtml(t("name_highlight_title", { name }))}">${escapeHtml(name)}</div>
       <div class="player-level ${getLevelClass(data.level)}">${escapeHtml(data.level) || "—"}</div>
       <div class="player-stats">${escapeHtml(data.stats) || "—"}</div>
       <div class="player-role">${escapeHtml(data.role) || "—"}</div>
-      <div class="player-focus${focusClass}">${escapeHtml(data.focus) || "Unknown"}</div>
+      <div class="player-focus${focusClass}">${escapeHtml(data.focus) || t("unknown_focus")}</div>
       <div class="player-skills">${skillsHtml}</div>
     `;
 
@@ -1465,8 +1806,8 @@ function renderBoard() {
     // overlay, so it doesn't disturb the row's 6-column grid layout.
     const editBtn = document.createElement("button");
     editBtn.className = "row-action-btn edit-row-btn";
-    editBtn.title = "Edit player";
-    editBtn.setAttribute("aria-label", "Edit player");
+    editBtn.title = t("edit_player_title");
+    editBtn.setAttribute("aria-label", t("edit_player_title"));
     editBtn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>`;
     // Bound to "pointerdown" rather than "click": this board can be
     // re-rendered at any moment by an incoming chat message (which wipes
@@ -1483,8 +1824,8 @@ function renderBoard() {
 
     const removeBtn = document.createElement("button");
     removeBtn.className = "row-action-btn remove-row-btn";
-    removeBtn.title = "Remove player";
-    removeBtn.setAttribute("aria-label", "Remove player");
+    removeBtn.title = t("remove_player_title");
+    removeBtn.setAttribute("aria-label", t("remove_player_title"));
     removeBtn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>`;
     removeBtn.addEventListener("pointerdown", (e) => {
       e.preventDefault();
@@ -1500,7 +1841,7 @@ function renderBoard() {
   } else {
     const trigger = document.createElement("div");
     trigger.className = "add-row-trigger";
-    trigger.innerHTML = `<span class="plus-icon">+</span> Add Player`;
+    trigger.innerHTML = `<span class="plus-icon">+</span> ${t("add_player_trigger")}`;
     trigger.addEventListener("pointerdown", (e) => {
       e.preventDefault();
       showAddRow();
@@ -1535,16 +1876,16 @@ function buildAddRowForm() {
   row.className = "player-row add-row";
 
   row.innerHTML = `
-    <input class="add-input" id="addRowName" type="text" placeholder="Player name">
-    <input class="add-input" id="addRowLevel" type="text" inputmode="numeric" placeholder="Level" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-    <input class="add-input" id="addRowStats" type="text" placeholder="Stats">
-    <input class="add-input" id="addRowRole" type="text" placeholder="Role">
-    <input class="add-input" id="addRowFocus" type="text" placeholder="Focus">
+    <input class="add-input" id="addRowName" type="text" placeholder="${escapeHtml(t("player_name_placeholder"))}">
+    <input class="add-input" id="addRowLevel" type="text" inputmode="numeric" placeholder="${escapeHtml(t("level_placeholder"))}" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+    <input class="add-input" id="addRowStats" type="text" placeholder="${escapeHtml(t("stats_placeholder"))}">
+    <input class="add-input" id="addRowRole" type="text" placeholder="${escapeHtml(t("role_placeholder"))}">
+    <input class="add-input" id="addRowFocus" type="text" placeholder="${escapeHtml(t("focus_placeholder"))}">
     <div class="add-skills-cell">
-      <textarea id="addRowSkills" placeholder="Skills, one per line..."></textarea>
+      <textarea id="addRowSkills" placeholder="${escapeHtml(t("skills_placeholder"))}"></textarea>
       <div class="add-row-actions">
-        <button class="ghost" style="background:rgba(124,92,255,0.1)" onclick="saveNewRow()">Save</button>
-        <button class="ghost danger" onclick="cancelAddRow()">Cancel</button>
+        <button class="ghost" style="background:rgba(124,92,255,0.1)" onclick="saveNewRow()">${escapeHtml(t("save_btn"))}</button>
+        <button class="ghost danger" onclick="cancelAddRow()">${escapeHtml(t("cancel_btn"))}</button>
       </div>
     </div>
   `;
@@ -1601,7 +1942,7 @@ function buildEditRowForm(name, data) {
   nameInput.className = "add-input";
   nameInput.id = "editRowName";
   nameInput.type = "text";
-  nameInput.placeholder = "Player name";
+  nameInput.placeholder = t("player_name_placeholder");
   nameInput.value = name;
 
   const levelInput = document.createElement("input");
@@ -1609,7 +1950,7 @@ function buildEditRowForm(name, data) {
   levelInput.id = "editRowLevel";
   levelInput.type = "text";
   levelInput.inputMode = "numeric";
-  levelInput.placeholder = "Level";
+  levelInput.placeholder = t("level_placeholder");
   levelInput.value = data.level || "";
   levelInput.addEventListener("input", () => {
     levelInput.value = levelInput.value.replace(/[^0-9]/g, "");
@@ -1619,21 +1960,21 @@ function buildEditRowForm(name, data) {
   statsInput.className = "add-input";
   statsInput.id = "editRowStats";
   statsInput.type = "text";
-  statsInput.placeholder = "Stats";
+  statsInput.placeholder = t("stats_placeholder");
   statsInput.value = data.stats || "";
 
   const roleInput = document.createElement("input");
   roleInput.className = "add-input";
   roleInput.id = "editRowRole";
   roleInput.type = "text";
-  roleInput.placeholder = "Role";
+  roleInput.placeholder = t("role_placeholder");
   roleInput.value = data.role || "";
 
   const focusInput = document.createElement("input");
   focusInput.className = "add-input";
   focusInput.id = "editRowFocus";
   focusInput.type = "text";
-  focusInput.placeholder = "Focus";
+  focusInput.placeholder = t("focus_placeholder");
   focusInput.value = data.focus || "";
 
   const skillsCell = document.createElement("div");
@@ -1641,7 +1982,7 @@ function buildEditRowForm(name, data) {
 
   const skillsTextarea = document.createElement("textarea");
   skillsTextarea.id = "editRowSkills";
-  skillsTextarea.placeholder = "Skills, one per line...";
+  skillsTextarea.placeholder = t("skills_placeholder");
   skillsTextarea.value = data.skills.map(s => s.text).join("\n");
 
   const actions = document.createElement("div");
@@ -1650,12 +1991,12 @@ function buildEditRowForm(name, data) {
   const saveBtn = document.createElement("button");
   saveBtn.className = "ghost";
   saveBtn.style.background = "rgba(124,92,255,0.1)";
-  saveBtn.textContent = "Save";
+  saveBtn.textContent = t("save_btn");
   saveBtn.onclick = () => saveEditedRow(name);
 
   const cancelBtn = document.createElement("button");
   cancelBtn.className = "ghost danger";
-  cancelBtn.textContent = "Cancel";
+  cancelBtn.textContent = t("cancel_btn");
   cancelBtn.onclick = () => cancelEditRow();
 
   actions.appendChild(saveBtn);
@@ -1749,16 +2090,16 @@ function closeSettings() {
 }
 
 function changeLanguage(lang) {
-  // Placeholder — wire this up to real translations when copy is ready.
-  alert("Language set to: " + lang + " (translations not yet implemented)");
+  applyLanguage(lang);
+  localStorage.setItem("kukoro_lang", currentLang);
 }
 
 function toggleDarkMode() {
-  alert("This tool now ships dark by default — light mode coming soon.");
+  alert(t("theme_alert"));
 }
 
 function readMe() {
-  alert("Kukoro Dungeon Raid Tool - Read Me placeholder");
+  alert(t("readme_alert"));
 }
 
 function onBossTypeSelectChange() {
@@ -1895,6 +2236,13 @@ document.getElementById("board").addEventListener("pointerdown", (e) => {
 // Render once on load so the "+ Add Player" trigger shows immediately,
 // even before any data has come in from chat or been added manually.
 renderBoard();
+
+// Restore whichever language the person picked last time (defaults to
+// English on a first visit), and reflect it in the Settings dropdown.
+const savedLang = localStorage.getItem("kukoro_lang") || "en";
+applyLanguage(savedLang);
+const languageSelect = document.getElementById("languageSelect");
+if (languageSelect) languageSelect.value = currentLang;
 
 </script>
 
