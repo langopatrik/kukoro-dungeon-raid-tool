@@ -404,6 +404,11 @@
     padding: 10px 66px 10px 14px;
   }
 
+  .player-row.player-row-out {
+    background: rgba(255,107,107,0.12);
+    border-color: rgba(255,107,107,0.35);
+  }
+
   .row-action-btn {
     position: absolute;
     top: 50%;
@@ -1257,7 +1262,8 @@ function renderBoard() {
     }
 
     const row = document.createElement("div");
-    row.className = "player-row";
+    const isOut = (data.nameHighlight || "green") === "red";
+    row.className = "player-row" + (isOut ? " player-row-out" : "");
 
     const skillsHtml = data.skills.length
       ? data.skills.map((s, i) => {
@@ -1266,7 +1272,7 @@ function renderBoard() {
         }).join("")
       : "—";
 
-    const nameHighlightClass = (data.nameHighlight || "green") === "red" ? " name-red" : " name-green";
+    const nameHighlightClass = isOut ? " name-red" : " name-green";
     const isMixedFocus = !!(data.focus && /^mixed\b/i.test(data.focus));
     const focusClass = data.focus ? (isMixedFocus ? " mixed-focus" : " has-focus") : "";
 
