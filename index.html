@@ -135,7 +135,12 @@
   <div class="main-area">
 
     <!-- SIDEBAR -->
-    <div class="sidebar>
+    <div class="sidebar">
+
+      <div class="field-label">Team Size:</div>
+      <div class="field-value">0 / 16</div>
+
+      <hr>
 
       <div class="field-label">Twitch Channel:</div>
       <textarea id="channelInput" placeholder="Enter channel name..."></textarea>
@@ -198,7 +203,6 @@
 <script>
 let ws;
 
-/* ORIGINAL CHAT LOGIC (UNCHANGED) */
 function connect() {
   const channel = document.getElementById("channelInput").value.trim().toLowerCase();
   if (!channel) return;
@@ -248,7 +252,7 @@ function connect() {
   };
 }
 
-/* NEW BUTTON FUNCTIONS (minimal placeholders) */
+/* NEW BUTTON FUNCTIONS */
 function resetTool() {
   document.getElementById("chat").innerHTML = "";
 }
