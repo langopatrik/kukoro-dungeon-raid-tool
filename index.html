@@ -651,7 +651,18 @@ function connect() {
       const username = userMatch ? userMatch[1] : "Unknown";
       const text = textMatch ? textMatch[1] : "";
 
-      const cleanedText = text.replace(/\u0001/g, "").replace(/^ACTION\s+/, "").trim();
+      // Twitch (and bots relaying into it) will sometimes append an
+      // invisible character — a zero-width space/joiner, or a Unicode
+      // "tag" character (U+E0000–U+E007F) — to an otherwise-identical
+      // message so Twitch's duplicate-message filter doesn't drop it.
+      // That trailing character is invisible in chat but breaks strict
+      // regexes anchored to the end of the string, so we strip it here
+      // before any parsing happens.
+      const cleanedText = text
+        .replace(/\u0001/g, "")
+        .replace(/^ACTION\s+/, "")
+        .replace(/[\u200B-\u200F\uFEFF\u2060-\u206F]|[\u{E0000}-\u{E007F}]/gu, "")
+        .trim();
 
       if (cleanedText.toUpperCase().includes("[KUKORO]")) {
 
@@ -673,13 +684,27 @@ function connect() {
         chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        const focusMatch = cleaned.match(/^(\S+)\s+has switched focus to\s+(.+?)\.?\s*$/i);
+        // Dropped the trailing "$" anchor — it required the switch message
+        // to end exactly at "focus to X" with nothing else after it, which
+        // is exactly the kind of match a stray leftover character (or
+        // extra trailing punctuation) would silently break.
+        const focusMatch = cleaned.match(/^(\S+)\s+has switched focus to\s+([^.]+)\.?/i);
 
         if (focusMatch) {
           handleFocusSwitch(focusMatch[1], focusMatch[2].trim());
-        } else {
+        } else if (cleaned.includes("(") && cleaned.includes("[")) {
+          // Only treat it as a full stats announcement if it actually looks
+          // like one (has the stats parens AND at least one skill bracket).
+          // Previously ANY unrecognized [KUKORO] message — including a
+          // focus-switch line whose regex failed to match for any reason —
+          // fell through to here and got parsed as a stats message. Since a
+          // message like "X has switched focus to Y." has no "(" or "[", it
+          // parsed to an almost-empty record, and upsertParticipant() would
+          // silently overwrite (wipe) that player's real stats/role/skills.
           const parsed = parseKukoroMessage(cleaned);
           upsertParticipant(parsed);
+        } else {
+          console.warn("Unrecognized [KUKORO] message, ignoring so it can't wipe existing data:", cleaned);
         }
       }
     }
