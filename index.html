@@ -1246,6 +1246,12 @@ function resetTool() {
   document.getElementById("chat").innerHTML = "";
   participants.clear();
   renderBoard();
+
+  document.getElementById("bossTypeSelect").value = "";
+  document.getElementById("bossTypeCustomInput").value = "";
+  document.getElementById("bossTypeCustomInput").style.display = "none";
+  document.getElementById("dungeonLevelInput").value = "";
+  document.getElementById("bossTypeDisplay").style.display = "none";
 }
 
 function switchTab(tab) {
