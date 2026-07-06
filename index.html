@@ -357,7 +357,7 @@
 
   .board-header, .player-row {
     display: grid;
-    grid-template-columns: 110px 60px 170px 120px 90px 1fr;
+    grid-template-columns: 90px 50px 130px 80px 70px 1.6fr;
     gap: 14px;
     align-items: center;
   }
@@ -535,8 +535,17 @@
 
       <div class="section">
         <div class="field-label">Player Data</div>
-        <textarea id="playerDataInput" placeholder="Paste player names, one per line..."></textarea>
+        <textarea id="playerDataInput" placeholder="Paste raid messages (or plain names), one per line..."></textarea>
         <button class="ghost" style="background:rgba(124,92,255,0.1)" onclick="addPlayersFromTextarea()">Add Players</button>
+
+        <div class="field-label" style="margin-top:14px;">Add Manually</div>
+        <input id="manualName" type="text" placeholder="Player name">
+        <input id="manualLevel" type="text" placeholder="Level (e.g. 18)">
+        <input id="manualStats" type="text" placeholder="Stats (e.g. Df. 15%, Crit. 15%, Agi. 10%)">
+        <input id="manualRole" type="text" placeholder="Role">
+        <input id="manualFocus" type="text" placeholder="Focus (e.g. lizard)">
+        <textarea id="manualSkills" placeholder="Skills, one per line..."></textarea>
+        <button class="ghost" style="background:rgba(124,92,255,0.1)" onclick="addPlayerManually()">Add Manual Row</button>
       </div>
 
     </div>
@@ -859,16 +868,59 @@ function switchTab(tab) {
 
 function addPlayersFromTextarea() {
   const input = document.getElementById("playerDataInput");
-  const names = input.value.split("\n").map(n => n.trim()).filter(n => n.length > 0);
+  const lines = input.value.split("\n").map(n => n.trim()).filter(n => n.length > 0);
 
-  names.forEach(name => {
-    if (!participants.has(name)) {
-      participants.set(name, { level: "", stats: "", role: "", skills: [], focus: null });
+  lines.forEach(line => {
+    // Strip an optional leading [KUKORO] tag, same as the live chat parser does.
+    const cleaned = line.replace(/\[KUKORO\]/i, "").trim();
+
+    if (cleaned.includes("(") && cleaned.includes("[")) {
+      // Looks like a full raid announcement (stats parens + at least one
+      // skill bracket) — reuse the exact same parser the chat listener
+      // uses, so a pasted message ends up identical to one heard live.
+      const parsed = parseKukoroMessage(cleaned);
+      upsertParticipant(parsed);
+    } else {
+      // Otherwise treat it as a bare name, same as before — and never
+      // clobber an existing player's real data with a blank entry.
+      const nameMatch = cleaned.match(/^(\S+)/);
+      const name = nameMatch ? nameMatch[1] : cleaned;
+      if (name && !participants.has(name)) {
+        participants.set(name, { level: "", stats: "", role: "", skills: [], focus: null });
+      }
     }
   });
   renderBoard();
 
   input.value = "";
+  switchTab("board");
+}
+
+function addPlayerManually() {
+  const name = document.getElementById("manualName").value.trim();
+  if (!name) return;
+
+  const level = document.getElementById("manualLevel").value.trim();
+  const stats = document.getElementById("manualStats").value.trim();
+  const role = document.getElementById("manualRole").value.trim();
+  const focusRaw = document.getElementById("manualFocus").value.trim();
+  const focus = focusRaw ? focusRaw.toLowerCase() : null;
+  const skills = document.getElementById("manualSkills").value
+    .split("\n")
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+
+  participants.set(name, { level, stats, role, skills, focus });
+  renderBoard();
+
+  // Clear the manual fields so the form is ready for the next row.
+  document.getElementById("manualName").value = "";
+  document.getElementById("manualLevel").value = "";
+  document.getElementById("manualStats").value = "";
+  document.getElementById("manualRole").value = "";
+  document.getElementById("manualFocus").value = "";
+  document.getElementById("manualSkills").value = "";
+
   switchTab("board");
 }
 
