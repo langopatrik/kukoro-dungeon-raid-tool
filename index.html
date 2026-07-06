@@ -369,6 +369,21 @@
     font-size: 13px;
   }
 
+  .boss-type-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    margin-bottom: 12px;
+    background: rgba(124,92,255,0.1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    width: fit-content;
+  }
+
   .board-header, .player-row {
     display: grid;
     grid-template-columns: 90px 50px 130px 80px 70px 1.6fr;
@@ -777,8 +792,35 @@
       </div>
 
       <div class="section">
-        <div class="field-label">Boss Race</div>
-        <button onclick="setBossRace()">Set</button>
+        <div class="field-label">Boss Type</div>
+        <select id="bossTypeSelect" onchange="onBossTypeSelectChange()">
+          <option value="">Select a boss...</option>
+          <option value="Bat">Bat</option>
+          <option value="Cyclops">Cyclops</option>
+          <option value="Dragon">Dragon</option>
+          <option value="Gargoyle">Gargoyle</option>
+          <option value="Goblin">Goblin</option>
+          <option value="Gorgon">Gorgon</option>
+          <option value="Imp">Imp</option>
+          <option value="Lizard">Lizard</option>
+          <option value="Minotaur">Minotaur</option>
+          <option value="Orc">Orc</option>
+          <option value="Shadow">Shadow</option>
+          <option value="Skeleton">Skeleton</option>
+          <option value="Slime">Slime</option>
+          <option value="Spider">Spider</option>
+          <option value="Troll">Troll</option>
+          <option value="WereWolf">WereWolf</option>
+          <option value="Wolf">Wolf</option>
+          <option value="Zombie">Zombie</option>
+          <option value="__custom__">Other (type your own)...</option>
+        </select>
+        <input id="bossTypeCustomInput" type="text" placeholder="Enter custom boss type" style="display:none;">
+
+        <div class="field-label" style="margin-top:10px;">Dungeon Level</div>
+        <input id="dungeonLevelInput" type="number" min="1" step="1" placeholder="e.g. 5">
+
+        <button onclick="setBossType()">Set</button>
       </div>
 
       <div class="section">
@@ -802,6 +844,16 @@
       </div>
 
       <div id="boardPanel" class="panel">
+        <div id="bossTypeDisplay" class="boss-type-display" style="display:none;">
+          <span id="bossTypeGroup" style="display:inline-flex; align-items:center; gap:8px;">
+            <span class="field-label" style="margin:0;">Boss</span>
+            <span id="bossTypeValue"></span>
+          </span>
+          <span id="dungeonLevelDisplay" style="display:none; align-items:center; gap:8px;">
+            <span class="field-label" style="margin:0 0 0 10px;">Dungeon Level</span>
+            <span id="dungeonLevelValue"></span>
+          </span>
+        </div>
         <div class="board-header">
           <div class="sort-header" id="sortHeader-name" onclick="toggleSort('name')">Players <span id="playerCount"></span><span class="sort-arrow"></span></div>
           <div class="sort-header" id="sortHeader-level" onclick="toggleSort('level')">Level<span class="sort-arrow"></span></div>
@@ -1629,8 +1681,54 @@ function readMe() {
   alert("Kukoro Dungeon Raid Tool - Read Me placeholder");
 }
 
-function setBossRace() {
-  alert("Boss Race set (placeholder)");
+function onBossTypeSelectChange() {
+  const select = document.getElementById("bossTypeSelect");
+  const customInput = document.getElementById("bossTypeCustomInput");
+  if (select.value === "__custom__") {
+    customInput.style.display = "block";
+    customInput.focus();
+  } else {
+    customInput.style.display = "none";
+  }
+}
+
+function setBossType() {
+  const select = document.getElementById("bossTypeSelect");
+  const customInput = document.getElementById("bossTypeCustomInput");
+  const display = document.getElementById("bossTypeDisplay");
+  const valueEl = document.getElementById("bossTypeValue");
+  const levelInput = document.getElementById("dungeonLevelInput");
+  const levelDisplay = document.getElementById("dungeonLevelDisplay");
+  const levelValueEl = document.getElementById("dungeonLevelValue");
+  const bossGroup = document.getElementById("bossTypeGroup");
+
+  let value = select.value;
+  if (value === "__custom__") {
+    value = customInput.value.trim();
+  }
+
+  const levelValue = levelInput.value.trim();
+
+  if (!value && !levelValue) {
+    display.style.display = "none";
+    return;
+  }
+
+  if (value) {
+    valueEl.textContent = value;
+    bossGroup.style.display = "inline-flex";
+  } else {
+    bossGroup.style.display = "none";
+  }
+
+  if (levelValue) {
+    levelValueEl.textContent = levelValue;
+    levelDisplay.style.display = "inline-flex";
+  } else {
+    levelDisplay.style.display = "none";
+  }
+
+  display.style.display = "flex";
 }
 
 function toggleSort(field) {
