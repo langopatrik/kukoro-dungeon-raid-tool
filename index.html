@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Kukoro Dungeon Raid Tool</title>
+<title>Kukoro Dungeon Raid Player Data Tool</title>
 
 <style>
   * { box-sizing: border-box; }
@@ -14,6 +14,7 @@
     display: flex;
     justify-content: center;
     padding: 20px 0;
+    color: #000;
   }
 
   .app {
@@ -45,6 +46,8 @@
     width: 260px;
     border-right: 1px solid #444;
     padding: 14px 18px;
+    overflow-y: auto;
+    max-height: 780px;
   }
 
   .content {
@@ -56,6 +59,11 @@
     font-weight: bold;
     font-size: 14px;
     margin-bottom: 4px;
+  }
+
+  .field-value {
+    font-size: 14px;
+    margin-bottom: 8px;
   }
 
   hr {
@@ -71,6 +79,7 @@
     padding: 6px 0;
     background: #e6e6e6;
     border: 1px solid #888;
+    border-radius: 2px;
     font-family: Georgia, serif;
     font-size: 13px;
     cursor: pointer;
@@ -80,15 +89,20 @@
     background: #d8d8d8;
   }
 
+  button.link-style {
+    color: #1a4fa0;
+  }
+
   textarea {
     display: block;
     width: 100%;
-    height: 90px;
+    height: 70px;
     margin-bottom: 14px;
     font-family: Georgia, serif;
     font-size: 13px;
     resize: vertical;
     border: 1px solid #444;
+    padding: 6px;
   }
 
   .chat {
@@ -121,6 +135,52 @@
     padding: 12px 0;
     font-size: 14px;
   }
+
+  .footer a {
+    color: #1a4fa0;
+  }
+
+  body.dark {
+    background: #1e1e1e;
+    color: #eee;
+  }
+
+  body.dark .app {
+    background: #2a2a2a;
+    border-color: #666;
+  }
+
+  body.dark .sidebar,
+  body.dark .title-bar,
+  body.dark .main-area {
+    border-color: #666;
+  }
+
+  body.dark .chat {
+    background: #222;
+    border-color: #666;
+    color: #eee;
+  }
+
+  body.dark textarea {
+    background: #333;
+    color: #eee;
+    border-color: #666;
+  }
+
+  body.dark button {
+    background: #3a3a3a;
+    color: #eee;
+    border-color: #666;
+  }
+
+  body.dark button:hover {
+    background: #454545;
+  }
+
+  body.dark .msg {
+    border-color: #444;
+  }
 </style>
 </head>
 
@@ -137,11 +197,6 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
 
-      <div class="field-label">Team Size:</div>
-      <div class="field-value">0 / 16</div>
-
-      <hr>
-
       <div class="field-label">Twitch Channel:</div>
       <textarea id="channelInput" placeholder="Enter channel name..."></textarea>
 
@@ -149,27 +204,25 @@
 
       <hr>
 
-      <!-- NEW CONTROLS -->
-
       <div class="field-label">Boss Race:</div>
       <button onclick="setBossRace()">Set</button>
 
       <hr>
 
-      <div class="field-label">Organize by:</div>
-      <button onclick="organizeBy('players')">Players</button>
+      <div class="field-label">Organize by: Players</div>
+      <button onclick="organizeBy('players')">Targets</button>
 
       <hr>
 
-      <div class="field-label">Sort by:</div>
-      <button onclick="sortBy('name')">Name</button>
+      <div class="field-label">Sort by: Name</div>
+      <button onclick="sortBy('name')">Level</button>
 
       <hr>
 
       <div class="field-label">Player Data:</div>
       <textarea placeholder="Place player data here..."></textarea>
 
-      <button>Add Players</button>
+      <button class="link-style">Add Players</button>
 
       <hr>
 
@@ -181,21 +234,19 @@
 
       <hr>
 
-      <button onclick="readMe()">Read Me</button>
+      <button class="link-style" onclick="readMe()">Read Me</button>
 
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="content">
-
       <div id="chat" class="chat"></div>
-
     </div>
 
   </div>
 
   <div class="footer">
-    See "<a href="#">Read Me</a>" for Copyright & Permissions.
+    See "<a href="#">Read Me</a>" for Copyright &amp; Permissions.
   </div>
 
 </div>
@@ -203,6 +254,7 @@
 <script>
 let ws;
 
+/* ORIGINAL CHAT LOGIC (UNCHANGED) */
 function connect() {
   const channel = document.getElementById("channelInput").value.trim().toLowerCase();
   if (!channel) return;
@@ -252,17 +304,13 @@ function connect() {
   };
 }
 
-/* NEW BUTTON FUNCTIONS */
+/* NEW BUTTON FUNCTIONS (minimal placeholders) */
 function resetTool() {
   document.getElementById("chat").innerHTML = "";
 }
 
 function toggleDarkMode() {
-  document.body.style.background =
-    document.body.style.background === "black" ? "#d4d4d4" : "black";
-
-  document.body.style.color =
-    document.body.style.color === "white" ? "black" : "white";
+  document.body.classList.toggle("dark");
 }
 
 function readMe() {
