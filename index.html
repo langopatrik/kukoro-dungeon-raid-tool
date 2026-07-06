@@ -1369,7 +1369,15 @@ function connect() {
         // extra trailing punctuation) would silently break.
         const focusMatch = cleaned.match(/^(\S+)\s+has switched focus to\s+([^.]+)\.?/i);
 
-        if (focusMatch) {
+        // Spanish-chat invasion announcement, e.g. "EMPIEZA LA INVASIÓN
+        // >>> ¡Vamos a tomar la mazmorra nivel 22!" — checked before the
+        // other branches since (like the focus-switch line) it has neither
+        // "(" nor "[" and would otherwise fall through to "unrecognized".
+        const invasionMatch = cleaned.match(/EMPIEZA\s+LA\s+INVASI[OÓ]N.*?nivel\s+(\d+)/i);
+
+        if (invasionMatch) {
+          handleInvasionStart(invasionMatch[1]);
+        } else if (focusMatch) {
           handleFocusSwitch(focusMatch[1], focusMatch[2].trim());
         } else if (cleaned.includes("(") && cleaned.includes("[")) {
           // Only treat it as a full stats announcement if it actually looks
@@ -1631,6 +1639,22 @@ function disconnect() {
   updateStatusText();
 }
 
+// Handles an "invasion start" announcement, e.g.
+// "[KUKORO] EMPIEZA LA INVASIÓN >>> ¡Vamos a tomar la mazmorra nivel 22!"
+// This is a fresh-raid signal: it wipes the current board and boss type
+// (old players/boss from the previous raid are no longer relevant) and
+// sets the dungeon level to the new one announced in chat.
+function handleInvasionStart(level) {
+  participants.clear();
+  renderBoard();
+
+  document.getElementById("bossTypeSelect").value = "";
+  document.getElementById("bossTypeCustomInput").value = "";
+  document.getElementById("bossTypeCustomInput").style.display = "none";
+  document.getElementById("dungeonLevelInput").value = level;
+  setBossType();
+}
+
 /* BUTTON FUNCTIONS */
 function resetTool() {
   document.getElementById("chat").innerHTML = "";
@@ -1680,7 +1704,13 @@ function addPlayersFromTextarea() {
     // through to the bare-name branch below (which wipes skills/focus).
     const focusMatch = cleaned.match(/^(\S+)\s+has switched focus to\s+([^.]+)\.?/i);
 
-    if (focusMatch) {
+    // Same invasion-announcement check as the live listener, so pasting
+    // one of these lines behaves identically to hearing it live.
+    const invasionMatch = cleaned.match(/EMPIEZA\s+LA\s+INVASI[OÓ]N.*?nivel\s+(\d+)/i);
+
+    if (invasionMatch) {
+      handleInvasionStart(invasionMatch[1]);
+    } else if (focusMatch) {
       handleFocusSwitch(focusMatch[1], focusMatch[2].trim());
     } else if (cleaned.includes("(") && cleaned.includes("[")) {
       // Looks like a full raid announcement (stats parens + at least one
