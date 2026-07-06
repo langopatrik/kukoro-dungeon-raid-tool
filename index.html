@@ -448,9 +448,20 @@
   }
 
   .player-row .player-name {
-    color: var(--accent-2);
     font-weight: 700;
     font-size: 13px;
+    display: inline-block;
+    padding: 3px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .player-row .player-name.name-green {
+    color: var(--success);
+  }
+
+  .player-row .player-name.name-red {
+    color: var(--accent-2);
   }
 
   .player-row .player-level {
@@ -1004,12 +1015,16 @@ function parseKukoroMessage(text) {
 }
 
 function upsertParticipant(parsed) {
+  // Keep the player's existing name highlight if they were already on the
+  // board; a fresh raid announcement shouldn't reset a manual red/green call.
+  const previous = participants.get(parsed.name);
   participants.set(parsed.name, {
     level: parsed.level,
     stats: parsed.stats,
     role: parsed.role,
     skills: parsed.skills,
-    focus: parsed.focus
+    focus: parsed.focus,
+    nameHighlight: previous ? (previous.nameHighlight || "green") : "green"
   });
   renderBoard();
 }
@@ -1033,7 +1048,8 @@ function handleFocusSwitch(name, newCreature) {
       stats: "",
       role: "",
       skills: [{ text: `Focuses ${newCreature}`, highlight: "none" }],
-      focus: newCreature.toLowerCase()
+      focus: newCreature.toLowerCase(),
+      nameHighlight: "green"
     });
   }
 
@@ -1111,7 +1127,7 @@ function addPlayersFromTextarea() {
       const nameMatch = cleaned.match(/^(\S+)/);
       const name = nameMatch ? nameMatch[1] : cleaned;
       if (name && !participants.has(name)) {
-        participants.set(name, { level: "", stats: "", role: "", skills: [], focus: null });
+        participants.set(name, { level: "", stats: "", role: "", skills: [], focus: null, nameHighlight: "green" });
       }
     }
   });
@@ -1190,8 +1206,10 @@ function renderBoard() {
         }).join("")
       : "—";
 
+    const nameHighlightClass = (data.nameHighlight || "green") === "red" ? " name-red" : " name-green";
+
     row.innerHTML = `
-      <div class="player-name">${escapeHtml(name)}</div>
+      <div class="player-name${nameHighlightClass}" data-name="${escapeHtml(name)}" title="Click to highlight red/green">${escapeHtml(name)}</div>
       <div class="player-level ${getLevelClass(data.level)}">${escapeHtml(data.level) || "—"}</div>
       <div class="player-stats">${escapeHtml(data.stats) || "—"}</div>
       <div class="player-role">${escapeHtml(data.role) || "—"}</div>
@@ -1302,7 +1320,7 @@ function saveNewRow() {
     .filter(s => s.length > 0)
     .map(text => ({ text, highlight: "none" }));
 
-  participants.set(name, { level, stats, role, skills, focus });
+  participants.set(name, { level, stats, role, skills, focus, nameHighlight: "green" });
 
   addingRow = false;
   renderBoard();
@@ -1449,7 +1467,7 @@ function saveEditedRow(originalName) {
   if (newName !== originalName) {
     participants.delete(originalName);
   }
-  participants.set(newName, { level, stats, role, skills, focus });
+  participants.set(newName, { level, stats, role, skills, focus, nameHighlight: previous ? (previous.nameHighlight || "green") : "green" });
 
   editingName = null;
   renderBoard();
@@ -1525,6 +1543,29 @@ function toggleSkillHighlight(name, index) {
   participants.set(name, player);
   renderBoard();
 }
+
+function toggleNameHighlight(name) {
+  if (!participants.has(name)) return;
+  const player = participants.get(name);
+
+  // Names only ever show as red or green (no neutral state), so a click
+  // just flips between the two.
+  const current = player.nameHighlight || "green";
+  player.nameHighlight = current === "green" ? "red" : "green";
+  participants.set(name, player);
+  renderBoard();
+}
+
+// Delegated listener for player-name clicks, same rationale as the skill
+// listener below: #board's contents get wiped and rebuilt on re-render, so
+// this is bound once to the never-replaced #board container instead of to
+// each individual name element.
+document.getElementById("board").addEventListener("pointerdown", (e) => {
+  const nameEl = e.target.closest(".player-name");
+  if (!nameEl) return;
+  e.preventDefault();
+  toggleNameHighlight(nameEl.dataset.name);
+});
 
 // Single delegated listener for skill clicks — attached once here rather
 // than re-attached inside renderBoard(), since #board itself is never
