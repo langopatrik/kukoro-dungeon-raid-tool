@@ -397,10 +397,46 @@
   }
 
   .player-row {
+    position: relative;
     background: var(--panel-2);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 10px 14px;
+    padding: 10px 34px 10px 14px;
+  }
+
+  .edit-row-btn {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: var(--text-dim);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .player-row:hover .edit-row-btn {
+    opacity: 1;
+  }
+
+  .edit-row-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(124,92,255,0.1);
+  }
+
+  .player-row.add-row {
+    padding-right: 14px;
   }
 
   .player-row .player-name {
@@ -755,6 +791,7 @@ let manualDisconnect = false;
 let participants = new Map(); // name -> { stats, role, skills }
 let sortMode = "name-asc";
 let addingRow = false;
+let editingName = null;
 
 /* ORIGINAL CHAT LOGIC (UNCHANGED) */
 function connect() {
@@ -1090,6 +1127,12 @@ function renderBoard() {
 
   sortedNames.forEach(name => {
     const data = participants.get(name);
+
+    if (name === editingName) {
+      board.appendChild(buildEditRowForm(name, data));
+      return;
+    }
+
     const row = document.createElement("div");
     row.className = "player-row";
 
@@ -1108,6 +1151,18 @@ function renderBoard() {
       <div class="player-focus">${escapeHtml(data.focus) || "Unknown"}</div>
       <div class="player-skills">${skillsHtml}</div>
     `;
+
+    // Built and attached separately (not via the innerHTML string above) so
+    // its click handler is bound directly to this exact player, with no
+    // string-escaping to worry about — it's an absolutely-positioned
+    // overlay, so it doesn't disturb the row's 6-column grid layout.
+    const editBtn = document.createElement("button");
+    editBtn.className = "edit-row-btn";
+    editBtn.title = "Edit player";
+    editBtn.setAttribute("aria-label", "Edit player");
+    editBtn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>`;
+    editBtn.onclick = () => startEditRow(name);
+    row.appendChild(editBtn);
 
     board.appendChild(row);
   });
@@ -1146,6 +1201,7 @@ function buildAddRowForm() {
 }
 
 function showAddRow() {
+  editingName = null;
   addingRow = true;
   renderBoard();
   const nameInput = document.getElementById("addRowName");
@@ -1178,6 +1234,141 @@ function saveNewRow() {
   participants.set(name, { level, stats, role, skills, focus });
 
   addingRow = false;
+  renderBoard();
+}
+
+// Built with DOM methods (not an innerHTML template) so pre-filled values
+// containing quotes or special characters can never break the markup —
+// each field is set via .value/.textContent instead of being interpolated
+// into an HTML string.
+function buildEditRowForm(name, data) {
+  const row = document.createElement("div");
+  row.className = "player-row add-row";
+
+  const nameInput = document.createElement("input");
+  nameInput.className = "add-input";
+  nameInput.id = "editRowName";
+  nameInput.type = "text";
+  nameInput.placeholder = "Player name";
+  nameInput.value = name;
+
+  const levelInput = document.createElement("input");
+  levelInput.className = "add-input";
+  levelInput.id = "editRowLevel";
+  levelInput.type = "text";
+  levelInput.inputMode = "numeric";
+  levelInput.placeholder = "Level";
+  levelInput.value = data.level || "";
+  levelInput.addEventListener("input", () => {
+    levelInput.value = levelInput.value.replace(/[^0-9]/g, "");
+  });
+
+  const statsInput = document.createElement("input");
+  statsInput.className = "add-input";
+  statsInput.id = "editRowStats";
+  statsInput.type = "text";
+  statsInput.placeholder = "Stats";
+  statsInput.value = data.stats || "";
+
+  const roleInput = document.createElement("input");
+  roleInput.className = "add-input";
+  roleInput.id = "editRowRole";
+  roleInput.type = "text";
+  roleInput.placeholder = "Role";
+  roleInput.value = data.role || "";
+
+  const focusInput = document.createElement("input");
+  focusInput.className = "add-input";
+  focusInput.id = "editRowFocus";
+  focusInput.type = "text";
+  focusInput.placeholder = "Focus";
+  focusInput.value = data.focus || "";
+
+  const skillsCell = document.createElement("div");
+  skillsCell.className = "add-skills-cell";
+
+  const skillsTextarea = document.createElement("textarea");
+  skillsTextarea.id = "editRowSkills";
+  skillsTextarea.placeholder = "Skills, one per line...";
+  skillsTextarea.value = data.skills.map(s => s.text).join("\n");
+
+  const actions = document.createElement("div");
+  actions.className = "add-row-actions";
+
+  const saveBtn = document.createElement("button");
+  saveBtn.className = "ghost";
+  saveBtn.style.background = "rgba(124,92,255,0.1)";
+  saveBtn.textContent = "Save";
+  saveBtn.onclick = () => saveEditedRow(name);
+
+  const cancelBtn = document.createElement("button");
+  cancelBtn.className = "ghost danger";
+  cancelBtn.textContent = "Cancel";
+  cancelBtn.onclick = () => cancelEditRow();
+
+  actions.appendChild(saveBtn);
+  actions.appendChild(cancelBtn);
+  skillsCell.appendChild(skillsTextarea);
+  skillsCell.appendChild(actions);
+
+  row.appendChild(nameInput);
+  row.appendChild(levelInput);
+  row.appendChild(statsInput);
+  row.appendChild(roleInput);
+  row.appendChild(focusInput);
+  row.appendChild(skillsCell);
+
+  return row;
+}
+
+function startEditRow(name) {
+  // Editing and adding are mutually exclusive so there's never more than
+  // one open form on the board at a time.
+  addingRow = false;
+  editingName = name;
+  renderBoard();
+  const nameInput = document.getElementById("editRowName");
+  if (nameInput) nameInput.focus();
+}
+
+function cancelEditRow() {
+  editingName = null;
+  renderBoard();
+}
+
+function saveEditedRow(originalName) {
+  const nameInput = document.getElementById("editRowName");
+  const newName = nameInput.value.trim();
+  if (!newName) {
+    nameInput.focus();
+    return;
+  }
+
+  const level = document.getElementById("editRowLevel").value.trim();
+  const stats = document.getElementById("editRowStats").value.trim();
+  const role = document.getElementById("editRowRole").value.trim();
+  const focusRaw = document.getElementById("editRowFocus").value.trim();
+  const focus = focusRaw ? focusRaw.toLowerCase() : null;
+  const skillLines = document.getElementById("editRowSkills").value
+    .split("\n")
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+
+  // Keep each skill's red/green highlight if its text is unchanged at that
+  // position; anything new or reordered just starts back at "none" (the
+  // player can re-click it on the board to re-highlight).
+  const previous = participants.get(originalName);
+  const skills = skillLines.map((text, i) => {
+    const prevSkill = previous && previous.skills[i];
+    return { text, highlight: prevSkill && prevSkill.text === text ? prevSkill.highlight : "none" };
+  });
+
+  if (newName !== originalName) {
+    participants.delete(originalName);
+  }
+  participants.set(newName, { level, stats, role, skills, focus });
+
+  editingName = null;
   renderBoard();
 }
 
