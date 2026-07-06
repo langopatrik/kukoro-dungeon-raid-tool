@@ -501,6 +501,10 @@
     color: var(--success);
   }
 
+  .player-row .player-focus.mixed-focus {
+    color: #e0c341;
+  }
+
   .player-row .player-skills {
     font-size: 12px;
     color: var(--text);
@@ -1003,12 +1007,27 @@ function parseKukoroMessage(text) {
     return { text: match.text, highlight };
   });
 
-  // Track the creature currently being targeted (e.g. "lizard" from
-  // "enemy lizard"), so a later focus-switch message knows what to replace.
-  let focus = null;
+  // Track the creature(s) currently being targeted (e.g. "lizard" from
+  // "enemy lizard"). Most raid messages target a single creature, but some
+  // skills pull in different directions (one skill vs. "enemy lizard",
+  // another vs. "enemy orc") — when that happens, combine them into a
+  // single "Mixed (Type1, Type2)" label instead of just picking the first
+  // one found, so the board can flag it distinctly.
+  const enemyTypes = [];
   for (const skill of skills) {
     const fm = skill.text.match(/enemy (\w+)/i);
-    if (fm) { focus = fm[1].toLowerCase(); break; }
+    if (fm) {
+      const type = fm[1].toLowerCase();
+      if (!enemyTypes.includes(type)) enemyTypes.push(type);
+    }
+  }
+
+  let focus = null;
+  if (enemyTypes.length > 1) {
+    const titleCase = t => t.charAt(0).toUpperCase() + t.slice(1);
+    focus = "Mixed (" + enemyTypes.map(titleCase).join(", ") + ")";
+  } else if (enemyTypes.length === 1) {
+    focus = enemyTypes[0];
   }
 
   return { name, level, stats, role, skills, focus };
@@ -1207,13 +1226,15 @@ function renderBoard() {
       : "—";
 
     const nameHighlightClass = (data.nameHighlight || "green") === "red" ? " name-red" : " name-green";
+    const isMixedFocus = !!(data.focus && /^mixed\b/i.test(data.focus));
+    const focusClass = data.focus ? (isMixedFocus ? " mixed-focus" : " has-focus") : "";
 
     row.innerHTML = `
       <div class="player-name${nameHighlightClass}" data-name="${escapeHtml(name)}" title="Click to highlight red/green">${escapeHtml(name)}</div>
       <div class="player-level ${getLevelClass(data.level)}">${escapeHtml(data.level) || "—"}</div>
       <div class="player-stats">${escapeHtml(data.stats) || "—"}</div>
       <div class="player-role">${escapeHtml(data.role) || "—"}</div>
-      <div class="player-focus${data.focus ? " has-focus" : ""}">${escapeHtml(data.focus) || "Unknown"}</div>
+      <div class="player-focus${focusClass}">${escapeHtml(data.focus) || "Unknown"}</div>
       <div class="player-skills">${skillsHtml}</div>
     `;
 
