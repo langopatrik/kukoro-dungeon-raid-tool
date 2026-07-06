@@ -606,7 +606,7 @@ function connect() {
       const username = userMatch ? userMatch[1] : "Unknown";
       const text = textMatch ? textMatch[1] : "";
 
-      const cleanedText = text.replace(/\u0001/g, "").trim();
+      const cleanedText = text.replace(/\u0001/g, "").replace(/^ACTION\s+/, "").trim();
 
       if (cleanedText.toUpperCase().includes("[KUKORO]")) {
 
