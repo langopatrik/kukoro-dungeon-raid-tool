@@ -337,6 +337,15 @@ function connect() {
   const channel = document.getElementById("channelInput").value.trim().toLowerCase();
   if (!channel) return;
 
+  // Close any existing connection first — otherwise reconnecting (or
+  // double-clicking Connect) leaves two sockets open, and every message
+  // gets rendered twice, once per socket.
+  if (ws) {
+    ws.onclose = null; // don't let the old socket's onclose overwrite our new status text
+    ws.close();
+    ws = null;
+  }
+
   const chatBox = document.getElementById("chat");
   chatBox.innerHTML = "";
   document.getElementById("statusText").textContent = "connecting to #" + channel + "…";
@@ -355,22 +364,33 @@ function connect() {
   };
 
   ws.onmessage = (event) => {
-    const msg = event.data;
+    // Twitch can pack multiple IRC lines into one WebSocket message,
+    // separated by CRLF — split them out and handle each individually.
+    const lines = event.data.split("\r\n").filter(line => line.length > 0);
 
-    if (msg.includes("PRIVMSG")) {
+    for (const line of lines) {
 
-      const userMatch = msg.match(/display-name=([^;]+)/);
-      const textMatch = msg.match(/PRIVMSG #[^ ]+ :(.*)/);
+      // Twitch periodically sends PING; we must reply with PONG or it
+      // will drop the connection after a timeout.
+      if (line.startsWith("PING")) {
+        ws.send("PONG :tmi.twitch.tv");
+        continue;
+      }
+
+      if (!line.includes("PRIVMSG")) continue;
+
+      const userMatch = line.match(/display-name=([^;]+)/);
+      const textMatch = line.match(/PRIVMSG #[^ ]+ :(.*)/);
 
       const username = userMatch ? userMatch[1] : "Unknown";
       const text = textMatch ? textMatch[1] : "";
 
       const cleanedText = text.replace(/\u0001/g, "").trim();
 
-      if (cleanedText.includes("[KUKORO]")) {
+      if (cleanedText.toUpperCase().includes("[KUKORO]")) {
 
         const cleaned = cleanedText
-          .replace("[KUKORO]", "")
+          .replace(/\[KUKORO\]/i, "")
           .trim();
 
         const div = document.createElement("div");
@@ -378,8 +398,8 @@ function connect() {
 
         div.innerHTML = `
           <span class="tag">KUKORO</span>
-          <span class="name">${username}</span>
-          <span class="text">${cleaned}</span>
+          <span class="name">${escapeHtml(username)}</span>
+          <span class="text">${escapeHtml(cleaned)}</span>
         `;
 
         chatBox.appendChild(div);
@@ -387,6 +407,12 @@ function connect() {
       }
     }
   };
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 /* BUTTON FUNCTIONS */
