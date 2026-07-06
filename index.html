@@ -5,181 +5,263 @@
 <title>Kukoro Dungeon Raid Player Data Tool</title>
 
 <style>
+  :root {
+    --bg: #0f1117;
+    --panel: #161923;
+    --panel-2: #1c2030;
+    --border: #2a2f3f;
+    --text: #e6e8f0;
+    --text-dim: #8b90a3;
+    --accent: #7c5cff;
+    --accent-2: #ff6b6b;
+    --success: #35d68f;
+  }
+
   * { box-sizing: border-box; }
 
   body {
     margin: 0;
-    background: #d4d4d4;
-    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(124,92,255,0.10), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(255,107,107,0.08), transparent 40%);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text);
     display: flex;
     justify-content: center;
-    padding: 20px 0;
-    color: #000;
+    padding: 32px 16px;
+    min-height: 100vh;
   }
 
   .app {
-    width: 1000px;
-    background: #fff;
-    border: 1px solid #444;
+    width: 100%;
+    max-width: 1080px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
     display: flex;
     flex-direction: column;
   }
 
   .title-bar {
-    border-bottom: 1px solid #444;
-    padding: 14px 0;
-    text-align: center;
+    padding: 22px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(180deg, rgba(124,92,255,0.08), transparent);
+  }
+
+  .title-bar .mark {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
   }
 
   .title-bar h1 {
     margin: 0;
-    font-size: 26px;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+
+  .title-bar .sub {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'SFMono-Regular', Consolas, monospace;
   }
 
   .main-area {
     display: flex;
-    border-bottom: 1px solid #444;
   }
 
   .sidebar {
-    width: 260px;
-    border-right: 1px solid #444;
-    padding: 14px 18px;
+    width: 280px;
+    padding: 20px;
+    border-right: 1px solid var(--border);
     overflow-y: auto;
-    max-height: 780px;
+    max-height: 760px;
+    background: var(--panel);
   }
 
-  .content {
-    flex: 1;
+  .section {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
     padding: 14px;
+    margin-bottom: 14px;
   }
 
   .field-label {
-    font-weight: bold;
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
-
-  .field-value {
-    font-size: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-dim);
     margin-bottom: 8px;
   }
 
-  hr {
-    border: none;
-    border-top: 1px solid #666;
-    margin: 10px 0 16px 0;
+  .field-label .value {
+    color: var(--text);
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 6px;
+  }
+
+  textarea, input {
+    display: block;
+    width: 100%;
+    background: #0e1119;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    resize: vertical;
+    margin-bottom: 10px;
+  }
+
+  textarea { height: 64px; }
+
+  textarea::placeholder, input::placeholder { color: #565c72; }
+
+  textarea:focus, input:focus, button:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,92,255,0.25);
   }
 
   button {
     display: block;
-    width: 160px;
-    margin: 0 auto 6px auto;
-    padding: 6px 0;
-    background: #e6e6e6;
-    border: 1px solid #888;
-    border-radius: 2px;
-    font-family: Georgia, serif;
+    width: 100%;
+    padding: 9px 0;
+    background: #232838;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
     font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
+    transition: background 0.15s ease, transform 0.05s ease, border-color 0.15s ease;
+    margin-bottom: 8px;
   }
+
+  button:last-child { margin-bottom: 0; }
 
   button:hover {
-    background: #d8d8d8;
+    background: #2a3044;
+    border-color: #3a4159;
   }
 
-  button.link-style {
-    color: #1a4fa0;
+  button:active {
+    transform: translateY(1px);
   }
 
-  textarea {
-    display: block;
-    width: 100%;
-    height: 70px;
-    margin-bottom: 14px;
-    font-family: Georgia, serif;
-    font-size: 13px;
-    resize: vertical;
-    border: 1px solid #444;
-    padding: 6px;
+  button.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  button.primary:hover {
+    background: #6c4cf0;
+  }
+
+  button.ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  button.ghost:hover {
+    background: rgba(124,92,255,0.1);
+  }
+
+  button.danger:hover {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+  }
+
+  .content {
+    flex: 1;
+    padding: 20px;
   }
 
   .chat {
     height: 720px;
     overflow-y: auto;
-    border: 1px solid #444;
-    padding: 10px;
-    font-size: 14px;
-    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 13px;
+    background: #0e1119;
+  }
+
+  .chat:empty::before {
+    content: "No raid messages yet — connect a channel to start listening.";
+    color: var(--text-dim);
+    font-size: 13px;
   }
 
   .msg {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 8px 10px;
+    border-radius: 8px;
     margin-bottom: 6px;
-    padding: 4px 0;
-    border-bottom: 1px solid #ddd;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
   }
 
   .tag {
-    color: #00a86b;
-    font-weight: bold;
+    color: var(--success);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.3px;
+    font-family: 'SFMono-Regular', Consolas, monospace;
   }
 
   .name {
-    color: #1a4fa0;
-    font-weight: bold;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .msg .text {
+    color: var(--text);
   }
 
   .footer {
     text-align: center;
-    padding: 12px 0;
-    font-size: 14px;
+    padding: 14px;
+    font-size: 12px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
   }
 
   .footer a {
-    color: #1a4fa0;
+    color: var(--accent);
+    text-decoration: none;
   }
 
-  body.dark {
-    background: #1e1e1e;
-    color: #eee;
+  .footer a:hover {
+    text-decoration: underline;
   }
 
-  body.dark .app {
-    background: #2a2a2a;
-    border-color: #666;
-  }
-
-  body.dark .sidebar,
-  body.dark .title-bar,
-  body.dark .main-area {
-    border-color: #666;
-  }
-
-  body.dark .chat {
-    background: #222;
-    border-color: #666;
-    color: #eee;
-  }
-
-  body.dark textarea {
-    background: #333;
-    color: #eee;
-    border-color: #666;
-  }
-
-  body.dark button {
-    background: #3a3a3a;
-    color: #eee;
-    border-color: #666;
-  }
-
-  body.dark button:hover {
-    background: #454545;
-  }
-
-  body.dark .msg {
-    border-color: #444;
+  .sidebar::-webkit-scrollbar, .chat::-webkit-scrollbar { width: 8px; }
+  .sidebar::-webkit-scrollbar-thumb, .chat::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
   }
 </style>
 </head>
@@ -189,7 +271,9 @@
 <div class="app">
 
   <div class="title-bar">
+    <div class="mark"></div>
     <h1>Kukoro Dungeon Raid Player Data Tool</h1>
+    <div class="sub" id="statusText">disconnected</div>
   </div>
 
   <div class="main-area">
@@ -197,44 +281,38 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
 
-      <div class="field-label">Twitch Channel:</div>
-      <textarea id="channelInput" placeholder="Enter channel name..."></textarea>
+      <div class="section">
+        <div class="field-label">Twitch Channel</div>
+        <input id="channelInput" type="text" placeholder="channel name">
+        <button class="primary" onclick="connect()">Connect Chat</button>
+      </div>
 
-      <button onclick="connect()">Connect Chat</button>
+      <div class="section">
+        <div class="field-label">Boss Race</div>
+        <button onclick="setBossRace()">Set</button>
+      </div>
 
-      <hr>
+      <div class="section">
+        <div class="field-label">Organize by <span class="value">Players</span></div>
+        <button onclick="organizeBy('players')">Targets</button>
+      </div>
 
-      <div class="field-label">Boss Race:</div>
-      <button onclick="setBossRace()">Set</button>
+      <div class="section">
+        <div class="field-label">Sort by <span class="value">Name</span></div>
+        <button onclick="sortBy('name')">Level</button>
+      </div>
 
-      <hr>
+      <div class="section">
+        <div class="field-label">Player Data</div>
+        <textarea placeholder="Paste player data here..."></textarea>
+        <button class="ghost" style="background:rgba(124,92,255,0.1)">Add Players</button>
+      </div>
 
-      <div class="field-label">Organize by: Players</div>
-      <button onclick="organizeBy('players')">Targets</button>
-
-      <hr>
-
-      <div class="field-label">Sort by: Name</div>
-      <button onclick="sortBy('name')">Level</button>
-
-      <hr>
-
-      <div class="field-label">Player Data:</div>
-      <textarea placeholder="Place player data here..."></textarea>
-
-      <button class="link-style">Add Players</button>
-
-      <hr>
-
-      <button onclick="resetTool()">Reset</button>
-
-      <hr>
-
-      <button onclick="toggleDarkMode()">Dark Mode</button>
-
-      <hr>
-
-      <button class="link-style" onclick="readMe()">Read Me</button>
+      <div class="section">
+        <button class="danger" onclick="resetTool()">Reset</button>
+        <button onclick="toggleDarkMode()">Toggle Theme</button>
+        <button class="ghost" onclick="readMe()">Read Me</button>
+      </div>
 
     </div>
 
@@ -246,7 +324,7 @@
   </div>
 
   <div class="footer">
-    See "<a href="#">Read Me</a>" for Copyright &amp; Permissions.
+    See "<a href="#" onclick="readMe(); return false;">Read Me</a>" for Copyright &amp; Permissions.
   </div>
 
 </div>
@@ -261,6 +339,7 @@ function connect() {
 
   const chatBox = document.getElementById("chat");
   chatBox.innerHTML = "";
+  document.getElementById("statusText").textContent = "connecting to #" + channel + "…";
 
   ws = new WebSocket("wss://irc-ws.chat.twitch.tv:443");
 
@@ -268,6 +347,11 @@ function connect() {
     ws.send("CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership");
     ws.send("NICK justinfan" + Math.floor(Math.random() * 100000));
     ws.send("JOIN #" + channel);
+    document.getElementById("statusText").textContent = "connected — #" + channel;
+  };
+
+  ws.onclose = () => {
+    document.getElementById("statusText").textContent = "disconnected";
   };
 
   ws.onmessage = (event) => {
@@ -293,8 +377,9 @@ function connect() {
         div.className = "msg";
 
         div.innerHTML = `
-          <span class="tag">[KUKORO]</span>
-          <span class="name"> ${username}</span>: ${cleaned}
+          <span class="tag">KUKORO</span>
+          <span class="name">${username}</span>
+          <span class="text">${cleaned}</span>
         `;
 
         chatBox.appendChild(div);
@@ -304,13 +389,13 @@ function connect() {
   };
 }
 
-/* NEW BUTTON FUNCTIONS (minimal placeholders) */
+/* BUTTON FUNCTIONS */
 function resetTool() {
   document.getElementById("chat").innerHTML = "";
 }
 
 function toggleDarkMode() {
-  document.body.classList.toggle("dark");
+  alert("This tool now ships dark by default — light mode coming soon.");
 }
 
 function readMe() {
