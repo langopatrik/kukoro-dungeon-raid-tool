@@ -659,20 +659,28 @@ function connect() {
           .replace(/\[KUKORO\]/i, "")
           .trim();
 
+        const nameMatch = cleaned.match(/^(\S+)/);
+        const name = nameMatch ? nameMatch[1] : "Unknown";
+        const restText = cleaned.slice(name.length);
+
         const div = document.createElement("div");
         div.className = "msg";
 
-        const parsed = parseKukoroMessage(cleaned);
-        const restText = cleaned.slice(parsed.name.length);
-
         div.innerHTML =
-          `<span class="chat-name">${escapeHtml(parsed.name)}</span>` +
+          `<span class="chat-name">${escapeHtml(name)}</span>` +
           `<span class="text">${escapeHtml(restText)}</span>`;
 
         chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        upsertParticipant(parsed);
+        const focusMatch = cleaned.match(/^(\S+)\s+has switched focus to\s+(.+?)\.?\s*$/i);
+
+        if (focusMatch) {
+          handleFocusSwitch(focusMatch[1], focusMatch[2].trim());
+        } else {
+          const parsed = parseKukoroMessage(cleaned);
+          upsertParticipant(parsed);
+        }
       }
     }
   };
@@ -707,15 +715,49 @@ function parseKukoroMessage(text) {
     skills.push(m[1].trim());
   }
 
-  return { name, stats, role, skills };
+  // Track the creature currently being targeted (e.g. "lizard" from
+  // "enemy lizard"), so a later focus-switch message knows what to replace.
+  let focus = null;
+  for (const skill of skills) {
+    const fm = skill.match(/enemy (\w+)/i);
+    if (fm) { focus = fm[1].toLowerCase(); break; }
+  }
+
+  return { name, stats, role, skills, focus };
 }
 
 function upsertParticipant(parsed) {
   participants.set(parsed.name, {
     stats: parsed.stats,
     role: parsed.role,
-    skills: parsed.skills
+    skills: parsed.skills,
+    focus: parsed.focus
   });
+  renderBoard();
+}
+
+function handleFocusSwitch(name, newCreature) {
+  if (participants.has(name)) {
+    const player = participants.get(name);
+
+    if (player.focus) {
+      const escaped = player.focus.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(escaped, "gi");
+      player.skills = player.skills.map(s => s.replace(regex, newCreature));
+    }
+
+    player.focus = newCreature.toLowerCase();
+    participants.set(name, player);
+  } else {
+    // Player hasn't posted full stats yet — just note what they're focusing.
+    participants.set(name, {
+      stats: "",
+      role: "",
+      skills: [`Focuses ${newCreature}`],
+      focus: newCreature.toLowerCase()
+    });
+  }
+
   renderBoard();
 }
 
@@ -768,7 +810,7 @@ function addPlayersFromTextarea() {
 
   names.forEach(name => {
     if (!participants.has(name)) {
-      participants.set(name, { stats: "", role: "", skills: [] });
+      participants.set(name, { stats: "", role: "", skills: [], focus: null });
     }
   });
   renderBoard();
