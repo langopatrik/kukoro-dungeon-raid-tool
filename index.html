@@ -288,6 +288,82 @@
   .content {
     flex: 1;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    display: inline-block;
+    width: auto;
+    margin: 0;
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    color: var(--text-dim);
+    font-weight: 600;
+  }
+
+  .tab-btn:hover {
+    background: rgba(124,92,255,0.08);
+    color: var(--text);
+  }
+
+  .tab-btn.active {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
+
+  .panel {
+    display: none;
+    flex: 1;
+  }
+
+  .panel.active {
+    display: block;
+  }
+
+  .board {
+    height: 720px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    background: #0e1119;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    align-content: start;
+  }
+
+  .board:empty::before {
+    content: "No players yet — they'll appear here once detected in chat or added manually.";
+    color: var(--text-dim);
+    font-size: 13px;
+    grid-column: 1 / -1;
+  }
+
+  .player-card {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .player-card .player-name {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 13px;
+    word-break: break-word;
   }
 
   .chat {
@@ -407,15 +483,26 @@
 
       <div class="section">
         <div class="field-label">Player Data</div>
-        <textarea placeholder="Paste player data here..."></textarea>
-        <button class="ghost" style="background:rgba(124,92,255,0.1)">Add Players</button>
+        <textarea id="playerDataInput" placeholder="Paste player names, one per line..."></textarea>
+        <button class="ghost" style="background:rgba(124,92,255,0.1)" onclick="addPlayersFromTextarea()">Add Players</button>
       </div>
 
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="content">
-      <div id="chat" class="chat"></div>
+      <div class="tabs">
+        <button class="tab-btn active" id="tabBtnChat" onclick="switchTab('chat')">Chat</button>
+        <button class="tab-btn" id="tabBtnBoard" onclick="switchTab('board')">Board</button>
+      </div>
+
+      <div id="chatPanel" class="panel active">
+        <div id="chat" class="chat"></div>
+      </div>
+
+      <div id="boardPanel" class="panel">
+        <div id="board" class="board"></div>
+      </div>
     </div>
 
   </div>
@@ -460,6 +547,7 @@
 <script>
 let ws;
 let manualDisconnect = false;
+let participants = new Set();
 
 /* ORIGINAL CHAT LOGIC (UNCHANGED) */
 function connect() {
@@ -537,6 +625,8 @@ function connect() {
 
         chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight;
+
+        addParticipant(username);
       }
     }
   };
@@ -562,6 +652,57 @@ function disconnect() {
 /* BUTTON FUNCTIONS */
 function resetTool() {
   document.getElementById("chat").innerHTML = "";
+  participants.clear();
+  renderBoard();
+}
+
+function switchTab(tab) {
+  const chatPanel = document.getElementById("chatPanel");
+  const boardPanel = document.getElementById("boardPanel");
+  const tabBtnChat = document.getElementById("tabBtnChat");
+  const tabBtnBoard = document.getElementById("tabBtnBoard");
+
+  if (tab === "board") {
+    chatPanel.classList.remove("active");
+    boardPanel.classList.add("active");
+    tabBtnChat.classList.remove("active");
+    tabBtnBoard.classList.add("active");
+  } else {
+    boardPanel.classList.remove("active");
+    chatPanel.classList.add("active");
+    tabBtnBoard.classList.remove("active");
+    tabBtnChat.classList.add("active");
+  }
+}
+
+function addParticipant(name) {
+  const trimmed = name.trim();
+  if (!trimmed || participants.has(trimmed)) return;
+  participants.add(trimmed);
+  renderBoard();
+}
+
+function addPlayersFromTextarea() {
+  const input = document.getElementById("playerDataInput");
+  const names = input.value.split("\n").map(n => n.trim()).filter(n => n.length > 0);
+
+  names.forEach(name => participants.add(name));
+  renderBoard();
+
+  input.value = "";
+  switchTab("board");
+}
+
+function renderBoard() {
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+
+  Array.from(participants).sort((a, b) => a.localeCompare(b)).forEach(name => {
+    const card = document.createElement("div");
+    card.className = "player-card";
+    card.innerHTML = `<div class="player-name">${escapeHtml(name)}</div>`;
+    board.appendChild(card);
+  });
 }
 
 function openSettings() {
