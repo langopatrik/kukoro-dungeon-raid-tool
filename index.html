@@ -331,6 +331,12 @@
     display: block;
   }
 
+  .chat-name {
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
   .board {
     height: 720px;
     overflow-y: auto;
@@ -338,32 +344,66 @@
     border-radius: 10px;
     padding: 14px;
     background: #0e1119;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 10px;
-    align-content: start;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
   .board:empty::before {
     content: "No players yet — they'll appear here once detected in chat or added manually.";
     color: var(--text-dim);
     font-size: 13px;
-    grid-column: 1 / -1;
   }
 
-  .player-card {
+  .board-header, .player-row {
+    display: grid;
+    grid-template-columns: 120px 200px 140px 1fr;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .board-header {
+    padding: 0 14px 8px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-dim);
+  }
+
+  .player-row {
     background: var(--panel-2);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 10px;
-    text-align: center;
+    padding: 10px 14px;
   }
 
-  .player-card .player-name {
+  .player-row .player-name {
+    color: var(--accent-2);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .player-row .player-stats {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .player-row .player-role {
+    font-size: 13px;
+  }
+
+  .player-row .player-skills {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .player-row .player-skills .skill-num {
     color: var(--accent);
     font-weight: 600;
-    font-size: 13px;
-    word-break: break-word;
+    margin-right: 4px;
   }
 
   .chat {
@@ -501,6 +541,12 @@
       </div>
 
       <div id="boardPanel" class="panel">
+        <div class="board-header">
+          <div>Player</div>
+          <div>Stats</div>
+          <div>Role</div>
+          <div>Skills</div>
+        </div>
         <div id="board" class="board"></div>
       </div>
     </div>
@@ -547,7 +593,7 @@
 <script>
 let ws;
 let manualDisconnect = false;
-let participants = new Set();
+let participants = new Map(); // name -> { stats, role, skills }
 
 /* ORIGINAL CHAT LOGIC (UNCHANGED) */
 function connect() {
@@ -617,13 +663,61 @@ function connect() {
         const div = document.createElement("div");
         div.className = "msg";
 
-        div.innerHTML = `<span class="text">${escapeHtml(cleaned)}</span>`;
+        const parsed = parseKukoroMessage(cleaned);
+        const restText = cleaned.slice(parsed.name.length);
+
+        div.innerHTML =
+          `<span class="chat-name">${escapeHtml(parsed.name)}</span>` +
+          `<span class="text">${escapeHtml(restText)}</span>`;
 
         chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight;
+
+        upsertParticipant(parsed);
       }
     }
   };
+}
+
+function parseKukoroMessage(text) {
+  // Example: DAMR66 (Lv. 18, Df. 15%, Crit. 20%, Agi. 15%) > 🗡️ Rogue
+  // [ skill one ] and [ skill two ].
+  const nameMatch = text.match(/^(\S+)/);
+  const name = nameMatch ? nameMatch[1] : "Unknown";
+
+  const statsMatch = text.match(/\(([^)]*)\)/);
+  const stats = statsMatch ? statsMatch[1].trim() : "";
+
+  // Role sits between the stats parentheses and the first skill bracket,
+  // after a ">" marker — but a player may have no role at all.
+  let role = "";
+  const afterStatsIndex = statsMatch ? statsMatch.index + statsMatch[0].length : name.length;
+  const firstBracketIndex = text.indexOf("[");
+  if (firstBracketIndex > afterStatsIndex) {
+    let segment = text.slice(afterStatsIndex, firstBracketIndex).trim();
+    if (segment.startsWith(">")) {
+      segment = segment.slice(1).trim();
+    }
+    role = segment;
+  }
+
+  const skills = [];
+  const skillRegex = /\[\s*([^\]]*?)\s*\]/g;
+  let m;
+  while ((m = skillRegex.exec(text)) !== null) {
+    skills.push(m[1].trim());
+  }
+
+  return { name, stats, role, skills };
+}
+
+function upsertParticipant(parsed) {
+  participants.set(parsed.name, {
+    stats: parsed.stats,
+    role: parsed.role,
+    skills: parsed.skills
+  });
+  renderBoard();
 }
 
 function escapeHtml(str) {
@@ -669,18 +763,15 @@ function switchTab(tab) {
   }
 }
 
-function addParticipant(name) {
-  const trimmed = name.trim();
-  if (!trimmed || participants.has(trimmed)) return;
-  participants.add(trimmed);
-  renderBoard();
-}
-
 function addPlayersFromTextarea() {
   const input = document.getElementById("playerDataInput");
   const names = input.value.split("\n").map(n => n.trim()).filter(n => n.length > 0);
 
-  names.forEach(name => participants.add(name));
+  names.forEach(name => {
+    if (!participants.has(name)) {
+      participants.set(name, { stats: "", role: "", skills: [] });
+    }
+  });
   renderBoard();
 
   input.value = "";
@@ -691,11 +782,25 @@ function renderBoard() {
   const board = document.getElementById("board");
   board.innerHTML = "";
 
-  Array.from(participants).sort((a, b) => a.localeCompare(b)).forEach(name => {
-    const card = document.createElement("div");
-    card.className = "player-card";
-    card.innerHTML = `<div class="player-name">${escapeHtml(name)}</div>`;
-    board.appendChild(card);
+  const sortedNames = Array.from(participants.keys()).sort((a, b) => a.localeCompare(b));
+
+  sortedNames.forEach(name => {
+    const data = participants.get(name);
+    const row = document.createElement("div");
+    row.className = "player-row";
+
+    const skillsHtml = data.skills.length
+      ? data.skills.map((s, i) => `<span class="skill-num">${i + 1}.</span>${escapeHtml(s)}`).join("<br>")
+      : "—";
+
+    row.innerHTML = `
+      <div class="player-name">${escapeHtml(name)}</div>
+      <div class="player-stats">${escapeHtml(data.stats) || "—"}</div>
+      <div class="player-role">${escapeHtml(data.role) || "—"}</div>
+      <div class="player-skills">${skillsHtml}</div>
+    `;
+
+    board.appendChild(row);
   });
 }
 
