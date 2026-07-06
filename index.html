@@ -748,11 +748,6 @@
       </div>
 
       <div class="section">
-        <div class="field-label">Organize by <span class="value">Players</span></div>
-        <button onclick="organizeBy('players')">Targets</button>
-      </div>
-
-      <div class="section">
         <div class="field-label">Player Data</div>
         <textarea id="playerDataInput" placeholder="Paste raid messages (or plain names), one per line..."></textarea>
         <button class="ghost" style="background:rgba(124,92,255,0.1)" onclick="addPlayersFromTextarea()">Add Players</button>
@@ -1563,10 +1558,6 @@ function readMe() {
 
 function setBossRace() {
   alert("Boss Race set (placeholder)");
-}
-
-function organizeBy(type) {
-  alert("Organize by: " + type);
 }
 
 function toggleSort(field) {
