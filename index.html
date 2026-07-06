@@ -1055,7 +1055,8 @@ function parseKukoroMessage(text) {
   // Level lives inside the stats parens (e.g. "Lv. 18, Df. 15%, ...") but
   // gets its own board column, so pull it out and tidy up what's left.
   let level = "";
-  const levelMatch = stats.match(/Lv\.?\s*(\d+)/i);
+  // "Lv." in English messages, "Nv." (Nivel) in Spanish ones.
+  const levelMatch = stats.match(/(?:Lv|Nv)\.?\s*(\d+)/i);
   if (levelMatch) {
     level = levelMatch[1];
     stats = stats
@@ -1095,7 +1096,7 @@ function parseKukoroMessage(text) {
     let highlight = "none";
     if (i > 0) {
       const connector = text.slice(skillMatches[i - 1].end, match.start);
-      if (/\bbut\b/i.test(connector)) {
+      if (/\b(but|pero)\b/i.test(connector)) {
         highlight = "red";
       }
     }
@@ -1119,7 +1120,10 @@ function deriveFocusFromSkills(skills) {
 
   const enemyTypes = [];
   for (const skill of skills) {
-    const fm = skill.text.match(/enemy (\w+)/i);
+    // English puts the creature type after the word "enemy" (e.g. "enemy
+    // troll"). Spanish reverses that order and uses "enemigo" (e.g. "troll
+    // enemigo"), so try both patterns.
+    const fm = skill.text.match(/enemy (\w+)/i) || skill.text.match(/(\w+)\s+enemigo/i);
     if (fm) {
       const type = fm[1].toLowerCase();
       if (!enemyTypes.includes(type)) enemyTypes.push(type);
