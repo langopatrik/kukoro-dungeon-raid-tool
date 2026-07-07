@@ -1720,13 +1720,19 @@ function escapeHtml(str) {
 // entered — [KUKORO] messages spell them out as "Df.", "Crit."/"Crít.",
 // and "Agi.", while Zeatrise already sends the icons directly. This
 // normalizes any text-label form into the matching icon so the board is
-// consistent either way.
+// consistent either way. Any whitespace right after the label is folded
+// into a non-breaking space along with the icon, so the icon and its
+// percentage can never get split onto separate lines when the cell wraps.
 function formatStatsForDisplay(stats) {
   if (!stats) return "";
   return stats
-    .replace(/\bDf\.?/gi, "🛡️")
-    .replace(/\bCr[ií]t\.?/gi, "💥")
-    .replace(/\bAgi\.?/gi, "⚡️");
+    .replace(/\bDf\.?\s*/gi, "🛡️")
+    .replace(/\bCr[ií]t\.?\s*/gi, "💥")
+    .replace(/\bAgi\.?\s*/gi, "⚡️")
+    // Zeatrise stats already pair an icon directly with its percentage
+    // (no label to replace), but may still have a stray space — strip it
+    // so the icon and value are always right up against each other.
+    .replace(/([🛡️💥⚡️])\s+(?=\d)/gu, "$1");
 }
 
 function getLevelClass(level) {
