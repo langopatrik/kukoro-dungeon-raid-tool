@@ -1365,16 +1365,16 @@ function connect() {
           .replace(/\[KUKORO\]/i, "")
           .trim();
 
-        const nameMatch = cleaned.match(/^(\S+)/);
-        const rawName = nameMatch ? nameMatch[1] : "Unknown";
-        const restText = cleaned.slice(rawName.length);
-
+        // Show the actual chatter who posted this (e.g. the streamer or a
+        // mod), not the player name parsed out of the message body — and
+        // keep the message exactly as sent, "[KUKORO]" tag included, same
+        // as the Zeatrise branch below.
         const div = document.createElement("div");
         div.className = "msg";
 
         div.innerHTML =
-          `<span class="chat-name">${escapeHtml(canonicalizeName(rawName))}</span>` +
-          `<span class="text">${escapeHtml(restText)}</span>`;
+          `<span class="chat-name">${escapeHtml(username)}</span>` +
+          `<span class="text">${escapeHtml(cleanedText)}</span>`;
 
         chatBox.appendChild(div);
         chatBox.scrollTop = chatBox.scrollHeight;
