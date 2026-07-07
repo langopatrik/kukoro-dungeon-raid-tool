@@ -1311,23 +1311,28 @@ function connect() {
 
       if (!line.includes("PRIVMSG")) continue;
 
-      // Only trust messages from the broadcaster or a moderator — anyone
-      // else in chat could type "[KUKORO] FakePlayer (...)" and inject
-      // bogus data onto the board. Twitch's IRC tags carry this directly:
+      // Only trust messages from the broadcaster, a moderator, or the
+      // Zeatrise stats bot — anyone else in chat could type
+      // "[KUKORO] FakePlayer (...)" and inject bogus data onto the board.
+      // Twitch's IRC tags carry broadcaster/mod status directly:
       // "badges=broadcaster/1,..." (or "moderator/1,...") lists the
       // account's badges, and "mod=1" is a simpler redundant flag for
       // moderator status. Either signal is enough to trust the sender.
+      // Zeatrise is a bot account with neither badge, so it's trusted by
+      // username instead.
       const badgesMatch = line.match(/badges=([^;]*)/);
       const badges = badgesMatch ? badgesMatch[1] : "";
       const isBroadcaster = /(^|,)broadcaster\//.test(badges);
       const isModByBadge = /(^|,)moderator\//.test(badges);
       const isModByTag = /[;@]mod=1(;|$)/.test(line);
-      if (!isBroadcaster && !isModByBadge && !isModByTag) continue;
 
       const userMatch = line.match(/display-name=([^;]+)/);
-      const textMatch = line.match(/PRIVMSG #[^ ]+ :(.*)/);
-
       const username = userMatch ? userMatch[1] : "Unknown";
+      const isZeatriseBot = username.toLowerCase() === "zeatrise";
+
+      if (!isBroadcaster && !isModByBadge && !isModByTag && !isZeatriseBot) continue;
+
+      const textMatch = line.match(/PRIVMSG #[^ ]+ :(.*)/);
       const text = textMatch ? textMatch[1] : "";
 
       // Twitch (and bots relaying into it) will sometimes append an
@@ -1375,8 +1380,16 @@ function connect() {
         // "(" nor "[" and would otherwise fall through to "unrecognized".
         const invasionMatch = cleaned.match(/EMPIEZA\s+LA\s+INVASI[OÓ]N.*?nivel\s+(\d+)/i);
 
+        // Matching end-of-invasion announcement, e.g. "FIN DE LA INVASIÓN
+        // >>> DAMR66, DRAKEVIELLX y SHHQD suben de nivel para las
+        // siguientes mazmorras." The named players aren't parsed out —
+        // the message alone just signals the raid is over.
+        const invasionEndMatch = cleaned.match(/FIN\s+DE\s+LA\s+INVASI[OÓ]N/i);
+
         if (invasionMatch) {
           handleInvasionStart(invasionMatch[1]);
+        } else if (invasionEndMatch) {
+          handleInvasionEnd();
         } else if (focusMatch) {
           handleFocusSwitch(focusMatch[1], focusMatch[2].trim());
         } else if (cleaned.includes("(") && cleaned.includes("[")) {
@@ -1393,9 +1406,82 @@ function connect() {
         } else {
           console.warn("Unrecognized [KUKORO] message, ignoring so it can't wipe existing data:", cleaned);
         }
+      } else if (isZeatriseBot) {
+        // Zeatrise sends many different message types (join announcements,
+        // banter, etc.) — every one of them gets shown in the chat log
+        // verbatim, but only the "LEVEL⠀NAME stats skills" stat-card shape
+        // (checked by parseZeatriseMessage) should ever touch the board.
+        const div = document.createElement("div");
+        div.className = "msg";
+
+        div.innerHTML =
+          `<span class="chat-name">${escapeHtml(username)}</span>` +
+          `<span class="text">${escapeHtml(cleanedText)}</span>`;
+
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        const zeatriseParsed = parseZeatriseMessage(cleanedText);
+        if (zeatriseParsed) {
+          upsertParticipant(zeatriseParsed);
+        }
       }
     }
   };
+}
+
+// Zeatrise's stat-card messages typeset the level and player name in
+// Unicode "Mathematical Sans-Serif Bold" characters (e.g. "𝟭𝟭" / "𝗦𝗘𝗕𝗔𝗦𝗟_𝟱𝟰"),
+// with a Braille Pattern Blank (U+2800) as the separator between them,
+// instead of a plain space. Both get converted back to ordinary ASCII here
+// so the rest of the parsing (and the board's existing name/level logic)
+// can treat them the same as any other player.
+function normalizeZeatriseBoldText(str) {
+  return Array.from(str).map(ch => {
+    const cp = ch.codePointAt(0);
+    if (cp >= 0x1D5D4 && cp <= 0x1D5ED) return String.fromCodePoint(cp - 0x1D5D4 + 0x41); // bold sans A-Z
+    if (cp >= 0x1D5EE && cp <= 0x1D607) return String.fromCodePoint(cp - 0x1D5EE + 0x61); // bold sans a-z
+    if (cp >= 0x1D7EC && cp <= 0x1D7F5) return String.fromCodePoint(cp - 0x1D7EC + 0x30); // bold sans 0-9
+    if (cp === 0x2800) return " "; // Braille blank used as a spacer
+    return ch;
+  }).join("");
+}
+
+// Zeatrise sends many different message types; only this "stat card" shape
+// should ever update the board:
+//   │LEVEL⠀PLAYERNAME STATS SKILL1 SKILL2
+// e.g. "│𝟭𝟭⠀𝗦𝗘𝗕𝗔𝗦𝗟_𝟱𝟰 🛡️15% 💥15% ⚡️10% 🟡 Esquivar... 🔴 Recibe..."
+// Returns null for anything that doesn't match that shape, so every other
+// Zeatrise message is simply left showing in the chat log untouched.
+function parseZeatriseMessage(rawText) {
+  const text = normalizeZeatriseBoldText(rawText).trim();
+
+  const headerMatch = text.match(/^│\s*(\d+)\s+(\S+)\s*(.*)$/su);
+  if (!headerMatch) return null;
+
+  const level = headerMatch[1];
+  const name = canonicalizeName(headerMatch[2]);
+  const rest = headerMatch[3];
+
+  // Everything up to the first colored circle marker is the stats block
+  // (e.g. "🛡️15% 💥15% ⚡️10%"); the skills start at the first marker.
+  const firstMarkerIndex = rest.search(/[🟡🟢🔴]/u);
+  const stats = (firstMarkerIndex === -1 ? rest : rest.slice(0, firstMarkerIndex)).trim();
+  const skillsText = firstMarkerIndex === -1 ? "" : rest.slice(firstMarkerIndex);
+
+  // Each skill is a colored circle followed by its description, running up
+  // to the next circle (or the end of the message). The marker sets the
+  // skill's highlight directly: 🟡 neutral/white, 🟢 positive/green,
+  // 🔴 lost/negative-red.
+  const skills = [...skillsText.matchAll(/([🟡🟢🔴])\s*([^🟡🟢🔴]*)/gu)].map(m => {
+    const marker = m[1];
+    const highlight = marker === "🟢" ? "green" : marker === "🔴" ? "red" : "none";
+    return { text: m[2].trim(), highlight };
+  });
+
+  const focus = deriveFocusFromSkills(skills);
+
+  return { name, level, stats, role: "", skills, focus };
 }
 
 function parseKukoroMessage(text) {
@@ -1641,18 +1727,28 @@ function disconnect() {
 
 // Handles an "invasion start" announcement, e.g.
 // "[KUKORO] EMPIEZA LA INVASIÓN >>> ¡Vamos a tomar la mazmorra nivel 22!"
-// This is a fresh-raid signal: it wipes the current board and boss type
-// (old players/boss from the previous raid are no longer relevant) and
-// sets the dungeon level to the new one announced in chat.
+// Just updates the dungeon level shown — the board and boss type are left
+// alone (they get cleared separately when the invasion ends, not when the
+// next one starts).
 function handleInvasionStart(level) {
+  document.getElementById("dungeonLevelInput").value = level;
+  setBossType();
+}
+
+// Handles an "invasion end" announcement, e.g.
+// "[KUKORO] FIN DE LA INVASIÓN >>> DAMR66, DRAKEVIELLX y SHHQD suben de
+// nivel para las siguientes mazmorras." The specific players named don't
+// matter here — the message itself just means the raid is over, so the
+// board, boss type, and dungeon level all get cleared out for the next one.
+function handleInvasionEnd() {
   participants.clear();
   renderBoard();
 
   document.getElementById("bossTypeSelect").value = "";
   document.getElementById("bossTypeCustomInput").value = "";
   document.getElementById("bossTypeCustomInput").style.display = "none";
-  document.getElementById("dungeonLevelInput").value = level;
-  setBossType();
+  document.getElementById("dungeonLevelInput").value = "";
+  document.getElementById("bossTypeDisplay").style.display = "none";
 }
 
 /* BUTTON FUNCTIONS */
@@ -1708,8 +1804,13 @@ function addPlayersFromTextarea() {
     // one of these lines behaves identically to hearing it live.
     const invasionMatch = cleaned.match(/EMPIEZA\s+LA\s+INVASI[OÓ]N.*?nivel\s+(\d+)/i);
 
+    // Same end-of-invasion check as the live listener.
+    const invasionEndMatch = cleaned.match(/FIN\s+DE\s+LA\s+INVASI[OÓ]N/i);
+
     if (invasionMatch) {
       handleInvasionStart(invasionMatch[1]);
+    } else if (invasionEndMatch) {
+      handleInvasionEnd();
     } else if (focusMatch) {
       handleFocusSwitch(focusMatch[1], focusMatch[2].trim());
     } else if (cleaned.includes("(") && cleaned.includes("[")) {
