@@ -15,6 +15,45 @@
     --accent: #7c5cff;
     --accent-2: #ff6b6b;
     --success: #35d68f;
+    --input-bg: #0e1119;
+    --placeholder: #565c72;
+    --button-bg: #232838;
+    --button-bg-hover: #2a3044;
+    --button-border-hover: #3a4159;
+    --shadow: rgba(0,0,0,0.45);
+    --shadow-modal: rgba(0,0,0,0.5);
+    --overlay: rgba(0,0,0,0.6);
+    --surface-hover: rgba(255,255,255,0.03);
+    --row-hover: rgba(255,255,255,0.06);
+    --bg-glow-1: rgba(124,92,255,0.10);
+    --bg-glow-2: rgba(255,107,107,0.08);
+  }
+
+  /* Light theme overrides. Toggled via the Settings > Theme button, which
+     sets data-theme="light" on <html> and persists the choice to
+     localStorage so it's restored on the next visit. */
+  :root[data-theme="light"] {
+    --bg: #f4f5f9;
+    --panel: #ffffff;
+    --panel-2: #f0f1f6;
+    --border: #dcdfe8;
+    --text: #1b1d27;
+    --text-dim: #6b7086;
+    --accent: #6f47ff;
+    --accent-2: #e0505a;
+    --success: #17a874;
+    --input-bg: #ffffff;
+    --placeholder: #9298ac;
+    --button-bg: #eef0f6;
+    --button-bg-hover: #e4e7f1;
+    --button-border-hover: #c7cbdc;
+    --shadow: rgba(30,34,54,0.12);
+    --shadow-modal: rgba(30,34,54,0.18);
+    --overlay: rgba(20,22,34,0.35);
+    --surface-hover: rgba(20,22,34,0.03);
+    --row-hover: rgba(20,22,34,0.05);
+    --bg-glow-1: rgba(124,92,255,0.07);
+    --bg-glow-2: rgba(255,107,107,0.06);
   }
 
   * { box-sizing: border-box; }
@@ -23,8 +62,8 @@
     margin: 0;
     background: var(--bg);
     background-image:
-      radial-gradient(circle at 15% 10%, rgba(124,92,255,0.10), transparent 40%),
-      radial-gradient(circle at 85% 90%, rgba(255,107,107,0.08), transparent 40%);
+      radial-gradient(circle at 15% 10%, var(--bg-glow-1), transparent 40%),
+      radial-gradient(circle at 85% 90%, var(--bg-glow-2), transparent 40%);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: var(--text);
     display: flex;
@@ -40,7 +79,7 @@
     border: 1px solid var(--border);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    box-shadow: 0 20px 60px var(--shadow);
     display: flex;
     flex-direction: column;
   }
@@ -131,7 +170,7 @@
   textarea, input {
     display: block;
     width: 100%;
-    background: #0e1119;
+    background: var(--input-bg);
     color: var(--text);
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -144,7 +183,7 @@
 
   textarea { height: 64px; }
 
-  textarea::placeholder, input::placeholder { color: #565c72; }
+  textarea::placeholder, input::placeholder { color: var(--placeholder); }
 
   textarea:focus, input:focus, button:focus-visible {
     outline: none;
@@ -156,7 +195,7 @@
     display: block;
     width: 100%;
     padding: 9px 0;
-    background: #232838;
+    background: var(--button-bg);
     color: var(--text);
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -171,8 +210,8 @@
   button:last-child { margin-bottom: 0; }
 
   button:hover {
-    background: #2a3044;
-    border-color: #3a4159;
+    background: var(--button-bg-hover);
+    border-color: var(--button-border-hover);
   }
 
   button:active {
@@ -241,7 +280,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background: var(--overlay);
     align-items: center;
     justify-content: center;
     z-index: 100;
@@ -257,7 +296,7 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 60px var(--shadow-modal);
   }
 
   .modal-header {
@@ -284,7 +323,7 @@
   select {
     display: block;
     width: 100%;
-    background: #0e1119;
+    background: var(--input-bg);
     color: var(--text);
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -357,7 +396,7 @@
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 14px;
-    background: #0e1119;
+    background: var(--input-bg);
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -449,7 +488,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255,255,255,0.03);
+    background: var(--surface-hover);
     border: 1px solid var(--border);
     border-radius: 6px;
     color: var(--text-dim);
@@ -569,7 +608,7 @@
   }
 
   .player-row .player-skills .skill-item:hover {
-    background: rgba(255,255,255,0.06);
+    background: var(--row-hover);
   }
 
   .player-row .player-skills .skill-item.skill-red {
@@ -632,7 +671,7 @@
   }
 
   .add-row .add-input {
-    background: #0e1119;
+    background: var(--input-bg);
     color: var(--text);
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -656,7 +695,7 @@
   }
 
   .add-skills-cell textarea {
-    background: #0e1119;
+    background: var(--input-bg);
     color: var(--text);
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -698,7 +737,7 @@
     border-radius: 10px;
     padding: 14px;
     font-size: 13px;
-    background: #0e1119;
+    background: var(--input-bg);
   }
 
   .chat:empty::before {
@@ -906,7 +945,7 @@
 
     <div class="section">
       <div class="field-label" data-i18n="theme_label">Theme</div>
-      <button onclick="toggleDarkMode()" data-i18n="toggle_theme_btn">Toggle Theme</button>
+      <button id="themeToggleBtn" onclick="toggleDarkMode()">Toggle Theme</button>
     </div>
 
     <div class="section">
@@ -936,7 +975,8 @@ const I18N = {
     app_title: "Kukoro Dungeon Raid Player Data Tool",
     settings_title: "Settings",
     theme_label: "Theme",
-    toggle_theme_btn: "Toggle Theme",
+    theme_btn_to_light: "Switch to Light Mode",
+    theme_btn_to_dark: "Switch to Dark Mode",
     language_label: "Language",
     toggle_sidebar_title: "Toggle sidebar",
     close_settings_aria: "Close settings",
@@ -981,7 +1021,7 @@ const I18N = {
     status_connecting: "connecting to #{channel}…",
     status_connected: "connected — #{channel}",
     status_dropped: "disconnected (connection dropped)",
-    theme_alert: "This tool now ships dark by default — light mode coming soon.",
+
     readme_alert: "Kukoro Dungeon Raid Tool - Read Me placeholder",
     skill_placeholder_title: "Placeholder — waiting for full stats",
     skill_highlight_title: "Click to highlight red/green",
@@ -991,7 +1031,8 @@ const I18N = {
     app_title: "Herramienta de Datos de Jugadores - Kukoro Dungeon Raid",
     settings_title: "Configuración",
     theme_label: "Tema",
-    toggle_theme_btn: "Cambiar Tema",
+    theme_btn_to_light: "Cambiar a Modo Claro",
+    theme_btn_to_dark: "Cambiar a Modo Oscuro",
     language_label: "Idioma",
     toggle_sidebar_title: "Mostrar/ocultar barra lateral",
     close_settings_aria: "Cerrar configuración",
@@ -1036,7 +1077,7 @@ const I18N = {
     status_connecting: "conectando a #{channel}…",
     status_connected: "conectado — #{channel}",
     status_dropped: "desconectado (conexión perdida)",
-    theme_alert: "Esta herramienta ahora viene en modo oscuro por defecto — el modo claro llegará pronto.",
+
     readme_alert: "Herramienta Kukoro Dungeon Raid - Marcador de posición Léeme",
     skill_placeholder_title: "Marcador de posición — esperando estadísticas completas",
     skill_highlight_title: "Haz clic para resaltar en rojo/verde",
@@ -1046,7 +1087,8 @@ const I18N = {
     app_title: "Outil de Données des Joueurs - Kukoro Dungeon Raid",
     settings_title: "Paramètres",
     theme_label: "Thème",
-    toggle_theme_btn: "Changer de Thème",
+    theme_btn_to_light: "Passer au Mode Clair",
+    theme_btn_to_dark: "Passer au Mode Sombre",
     language_label: "Langue",
     toggle_sidebar_title: "Afficher/masquer la barre latérale",
     close_settings_aria: "Fermer les paramètres",
@@ -1091,7 +1133,7 @@ const I18N = {
     status_connecting: "connexion à #{channel}…",
     status_connected: "connecté — #{channel}",
     status_dropped: "déconnecté (connexion perdue)",
-    theme_alert: "Cet outil est désormais sombre par défaut — le mode clair arrive bientôt.",
+
     readme_alert: "Outil Kukoro Dungeon Raid - Espace réservé Lisez-moi",
     skill_placeholder_title: "Espace réservé — en attente des stats complètes",
     skill_highlight_title: "Cliquez pour surligner en rouge/vert",
@@ -1101,7 +1143,8 @@ const I18N = {
     app_title: "Kukoro Dungeon Raid Spielerdaten-Tool",
     settings_title: "Einstellungen",
     theme_label: "Design",
-    toggle_theme_btn: "Design Wechseln",
+    theme_btn_to_light: "Zu Hellem Modus wechseln",
+    theme_btn_to_dark: "Zu Dunklem Modus wechseln",
     language_label: "Sprache",
     toggle_sidebar_title: "Seitenleiste ein-/ausblenden",
     close_settings_aria: "Einstellungen schließen",
@@ -1146,7 +1189,7 @@ const I18N = {
     status_connecting: "Verbinde mit #{channel}…",
     status_connected: "verbunden — #{channel}",
     status_dropped: "getrennt (Verbindung unterbrochen)",
-    theme_alert: "Dieses Tool ist jetzt standardmäßig dunkel — der helle Modus folgt bald.",
+
     readme_alert: "Kukoro Dungeon Raid Tool - Liesmich-Platzhalter",
     skill_placeholder_title: "Platzhalter — wartet auf vollständige Werte",
     skill_highlight_title: "Klicken zum Markieren in Rot/Grün",
@@ -1156,7 +1199,8 @@ const I18N = {
     app_title: "Kukoro ダンジョンレイド プレイヤーデータツール",
     settings_title: "設定",
     theme_label: "テーマ",
-    toggle_theme_btn: "テーマを切り替え",
+    theme_btn_to_light: "ライトモードに切り替え",
+    theme_btn_to_dark: "ダークモードに切り替え",
     language_label: "言語",
     toggle_sidebar_title: "サイドバーの表示切替",
     close_settings_aria: "設定を閉じる",
@@ -1201,7 +1245,7 @@ const I18N = {
     status_connecting: "#{channel} に接続中…",
     status_connected: "接続済み — #{channel}",
     status_dropped: "切断（接続が失われました）",
-    theme_alert: "このツールは現在デフォルトでダークモードです — ライトモードは近日公開予定です。",
+
     readme_alert: "Kukoro ダンジョンレイドツール - Read Me（仮）",
     skill_placeholder_title: "プレースホルダー — 完全なステータス待ち",
     skill_highlight_title: "クリックして赤/緑でハイライト",
@@ -1241,6 +1285,7 @@ function applyLanguage(lang) {
   document.querySelectorAll("[data-i18n-title]").forEach(el => { el.title = t(el.dataset.i18nTitle); });
   document.querySelectorAll("[data-i18n-aria]").forEach(el => { el.setAttribute("aria-label", t(el.dataset.i18nAria)); });
 
+  updateThemeButtonLabel();
   updateStatusText();
   renderBoard();
 }
@@ -2255,8 +2300,32 @@ function changeLanguage(lang) {
   localStorage.setItem("kukoro_lang", currentLang);
 }
 
+// The button label always names the mode a click will switch *to*, so it
+// reflects the current theme rather than staying static.
+function updateThemeButtonLabel() {
+  const btn = document.getElementById("themeToggleBtn");
+  if (!btn) return;
+  const isLight = document.documentElement.getAttribute("data-theme") === "light";
+  btn.textContent = isLight ? t("theme_btn_to_dark") : t("theme_btn_to_light");
+}
+
+// Applies the given theme ("light" or "dark") by toggling the data-theme
+// attribute the CSS variable overrides key off of, persists the choice so
+// it survives a reload, and keeps the settings button label in sync.
+function applyTheme(theme) {
+  if (theme === "light") {
+    document.documentElement.setAttribute("data-theme", "light");
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+  updateThemeButtonLabel();
+}
+
 function toggleDarkMode() {
-  alert(t("theme_alert"));
+  const isLight = document.documentElement.getAttribute("data-theme") === "light";
+  const next = isLight ? "dark" : "light";
+  applyTheme(next);
+  localStorage.setItem("kukoro_theme", next);
 }
 
 function readMe() {
@@ -2404,6 +2473,11 @@ const savedLang = localStorage.getItem("kukoro_lang") || "en";
 applyLanguage(savedLang);
 const languageSelect = document.getElementById("languageSelect");
 if (languageSelect) languageSelect.value = currentLang;
+
+// Restore whichever theme the person picked last time (defaults to dark,
+// this tool's original look, on a first visit).
+const savedTheme = localStorage.getItem("kukoro_theme") || "dark";
+applyTheme(savedTheme);
 
 </script>
 
