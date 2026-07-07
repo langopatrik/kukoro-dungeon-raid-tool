@@ -718,6 +718,17 @@
     border: 1px solid var(--border);
   }
 
+  /* Zeatrise bot messages get a yellow highlight so they stand out from
+     regular [KUKORO] raid messages in the chat log. */
+  .msg.zeatrise {
+    background: rgba(255, 214, 0, 0.08);
+    border-color: rgba(255, 214, 0, 0.45);
+  }
+
+  .msg.zeatrise .chat-name {
+    color: #ffd600;
+  }
+
   .tag {
     color: var(--success);
     font-weight: 700;
@@ -1412,7 +1423,7 @@ function connect() {
         // verbatim, but only the "LEVEL⠀NAME stats skills" stat-card shape
         // (checked by parseZeatriseMessage) should ever touch the board.
         const div = document.createElement("div");
-        div.className = "msg";
+        div.className = "msg zeatrise";
 
         div.innerHTML =
           `<span class="chat-name">${escapeHtml(username)}</span>` +
