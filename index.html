@@ -1716,6 +1716,19 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+// The board always shows stats as icons, regardless of how they were
+// entered — [KUKORO] messages spell them out as "Df.", "Crit."/"Crít.",
+// and "Agi.", while Zeatrise already sends the icons directly. This
+// normalizes any text-label form into the matching icon so the board is
+// consistent either way.
+function formatStatsForDisplay(stats) {
+  if (!stats) return "";
+  return stats
+    .replace(/\bDf\.?/gi, "🛡️")
+    .replace(/\bCr[ií]t\.?/gi, "💥")
+    .replace(/\bAgi\.?/gi, "⚡️");
+}
+
 function getLevelClass(level) {
   const num = parseInt(level, 10);
   if (isNaN(num)) return "";
@@ -1936,7 +1949,7 @@ function renderBoard() {
     row.innerHTML = `
       <div class="player-name${nameHighlightClass}" data-name="${escapeHtml(name)}" title="${escapeHtml(t("name_highlight_title", { name }))}">${escapeHtml(name)}</div>
       <div class="player-level ${getLevelClass(data.level)}">${escapeHtml(data.level) || "—"}</div>
-      <div class="player-stats">${escapeHtml(data.stats) || "—"}</div>
+      <div class="player-stats">${escapeHtml(formatStatsForDisplay(data.stats)) || "—"}</div>
       <div class="player-role">${escapeHtml(data.role) || "—"}</div>
       <div class="player-focus${focusClass}">${escapeHtml(data.focus) || t("unknown_focus")}</div>
       <div class="player-skills">${skillsHtml}</div>
