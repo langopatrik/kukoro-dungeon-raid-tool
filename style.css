@@ -1,0 +1,854 @@
+  :root {
+    --bg: #0f1117;
+    --panel: #161923;
+    --panel-2: #1c2030;
+    --border: #2a2f3f;
+    --text: #e6e8f0;
+    --text-dim: #8b90a3;
+    --accent: #7c5cff;
+    --accent-2: #ff6b6b;
+    --success: #35d68f;
+    --input-bg: #0e1119;
+    --placeholder: #565c72;
+    --button-bg: #232838;
+    --button-bg-hover: #2a3044;
+    --button-border-hover: #3a4159;
+    --shadow: rgba(0,0,0,0.45);
+    --shadow-modal: rgba(0,0,0,0.5);
+    --overlay: rgba(0,0,0,0.6);
+    --surface-hover: rgba(255,255,255,0.03);
+    --row-hover: rgba(255,255,255,0.06);
+    --bg-glow-1: rgba(124,92,255,0.10);
+    --bg-glow-2: rgba(255,107,107,0.08);
+    --title-glow: rgba(124,92,255,0.08);
+    --warn: #e0c341;
+  }
+
+  /* Light theme overrides. Toggled via the Settings > Theme button, which
+     sets data-theme="light" on <html> and persists the choice to
+     localStorage so it's restored on the next visit. Built as its own
+     palette rather than an inverted dark theme: a soft lavender-tinted
+     canvas, a bright white app shell that lifts off it with a colored
+     shadow, and cards/inputs a shade apart from each other for depth. */
+  :root[data-theme="light"] {
+    --bg: #e9ebf5;
+    --panel: #ffffff;
+    --panel-2: #f2f3fa;
+    --border: #dee1ee;
+    --text: #1f2130;
+    --text-dim: #6b7086;
+    --accent: #6d42f5;
+    --accent-2: #e2505b;
+    --success: #16966d;
+    --input-bg: #fbfbfe;
+    --placeholder: #9aa0b8;
+    --button-bg: #f0f1f8;
+    --button-bg-hover: #e6e8f4;
+    --button-border-hover: #c9cce3;
+    --shadow: rgba(83,66,159,0.16);
+    --shadow-modal: rgba(58,46,110,0.22);
+    --overlay: rgba(30,26,50,0.4);
+    --surface-hover: rgba(70,55,150,0.04);
+    --row-hover: rgba(70,55,150,0.06);
+    --bg-glow-1: rgba(124,92,255,0.10);
+    --bg-glow-2: rgba(255,107,107,0.08);
+    --title-glow: rgba(124,92,255,0.10);
+    --warn: #b8860a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 10%, var(--bg-glow-1), transparent 40%),
+      radial-gradient(circle at 85% 90%, var(--bg-glow-2), transparent 40%);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+    min-height: 100vh;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 1080px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px var(--shadow);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .title-bar {
+    padding: 22px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(180deg, var(--title-glow), transparent);
+  }
+
+  .title-bar .mark {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  .title-bar h1 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+
+  .title-bar .sub {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'SFMono-Regular', Consolas, monospace;
+  }
+
+  .main-area {
+    display: flex;
+  }
+
+  .sidebar {
+    width: 280px;
+    padding: 20px;
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    max-height: 760px;
+    background: var(--panel);
+    flex-shrink: 0;
+    transition: width 0.2s ease, padding 0.2s ease, border-color 0.2s ease;
+    overflow-x: hidden;
+  }
+
+  .sidebar.collapsed {
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-right-color: transparent;
+  }
+
+  .sidebar.collapsed > * {
+    display: none;
+  }
+
+  .section {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+
+  .field-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .field-label .value {
+    color: var(--text);
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 6px;
+  }
+
+  textarea, input {
+    display: block;
+    width: 100%;
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    resize: vertical;
+    margin-bottom: 10px;
+  }
+
+  textarea { height: 64px; }
+
+  textarea::placeholder, input::placeholder { color: var(--placeholder); }
+
+  textarea:focus, input:focus, button:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,92,255,0.25);
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    padding: 9px 0;
+    background: var(--button-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.05s ease, border-color 0.15s ease;
+    margin-bottom: 8px;
+  }
+
+  button:last-child { margin-bottom: 0; }
+
+  button:hover {
+    background: var(--button-bg-hover);
+    border-color: var(--button-border-hover);
+  }
+
+  button:active {
+    transform: translateY(1px);
+  }
+
+  button.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  button.primary:hover {
+    background: #6c4cf0;
+  }
+
+  button.ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  button.ghost:hover {
+    background: rgba(124,92,255,0.1);
+  }
+
+  button.danger:hover {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+  }
+
+  .button-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .button-row button {
+    margin-bottom: 0;
+  }
+
+  .icon-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    margin: 0 0 0 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .icon-btn:hover {
+    color: var(--text);
+    border-color: var(--accent);
+    background: rgba(124,92,255,0.1);
+  }
+
+  /* Small red counter shown on the Settings gear once new, un-exported
+     board text (roles/focuses/skills) has been logged, and again next to
+     the export button itself — both hidden until there's something new. */
+  .notif-badge {
+    display: none;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 8px;
+    background: var(--accent-2);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .notif-badge.visible {
+    display: block;
+  }
+
+  /* The bell's icon (and border) picks up the same red as its badge while
+     something new is waiting, so it reads as "lit up" even before you spot
+     the number — same idea as an unread-mail icon. */
+  #translationBellBtn.has-notifications {
+    color: var(--accent-2);
+    border-color: var(--accent-2);
+  }
+
+  .export-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: var(--accent-2);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+
+  .modal-overlay.open {
+    display: flex;
+  }
+
+  .modal {
+    width: 320px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 20px 60px var(--shadow-modal);
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .modal-header h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .modal .section {
+    margin-bottom: 12px;
+  }
+
+  .modal .section:last-child {
+    margin-bottom: 0;
+  }
+
+  select {
+    display: block;
+    width: 100%;
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+  }
+
+  select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,92,255,0.25);
+  }
+
+  .content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    display: inline-block;
+    width: auto;
+    margin: 0;
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    color: var(--text-dim);
+    font-weight: 600;
+  }
+
+  .tab-btn:hover {
+    background: rgba(124,92,255,0.08);
+    color: var(--text);
+  }
+
+  .tab-btn.active {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
+
+  .panel {
+    display: none;
+    flex: 1;
+  }
+
+  .panel.active {
+    display: block;
+  }
+
+  .chat-name {
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
+  .board {
+    height: 720px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    background: var(--input-bg);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .board:empty::before {
+    content: "No players yet — they'll appear here once detected in chat or added manually.";
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+
+  .boss-type-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    margin-bottom: 12px;
+    background: rgba(124,92,255,0.1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    width: fit-content;
+  }
+
+  .board-header, .player-row {
+    display: grid;
+    grid-template-columns: 118px 42px 122px 80px 70px 1.6fr;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .board-header {
+    padding: 0 14px 8px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-dim);
+  }
+
+  .sort-header {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s ease;
+  }
+
+  .sort-header:hover {
+    color: var(--text);
+  }
+
+  .sort-header.active {
+    color: var(--accent);
+  }
+
+  .sort-arrow {
+    font-size: 9px;
+    line-height: 1;
+    width: 8px;
+    display: inline-block;
+  }
+
+  .player-row {
+    position: relative;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 66px 10px 14px;
+  }
+
+  .player-row.player-row-out {
+    background: rgba(255,107,107,0.12);
+    border-color: rgba(255,107,107,0.35);
+  }
+
+  .row-action-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .edit-row-btn {
+    right: 38px;
+  }
+
+  .edit-row-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(124,92,255,0.1);
+  }
+
+  .remove-row-btn {
+    right: 8px;
+  }
+
+  .remove-row-btn:hover {
+    color: var(--accent-2);
+    border-color: var(--accent-2);
+    background: rgba(255,107,107,0.1);
+  }
+
+  .player-row.add-row {
+    padding-right: 14px;
+  }
+
+  .player-row .player-name {
+    font-weight: 700;
+    font-size: 13px;
+    display: inline-block;
+    padding: 3px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .player-row .player-name.name-green {
+    color: var(--success);
+  }
+
+  .player-row .player-name.name-red {
+    color: var(--accent-2);
+  }
+
+  .player-row .player-level {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .player-row .player-level.level-low {
+    color: var(--success);
+  }
+
+  .player-row .player-level.level-mid {
+    color: var(--warn);
+  }
+
+  .player-row .player-level.level-high {
+    color: var(--accent-2);
+  }
+
+  .player-row .player-stats {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .player-row .player-role {
+    font-size: 13px;
+  }
+
+  .player-row .player-focus {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-transform: capitalize;
+  }
+
+  .player-row .player-focus.has-focus {
+    color: var(--success);
+  }
+
+  .player-row .player-focus.mixed-focus {
+    color: var(--warn);
+  }
+
+  .player-row .player-skills {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .player-row .player-skills .skill-num {
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
+  .player-row .player-skills .skill-item {
+    padding: 3px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .player-row .player-skills .skill-item + .skill-item {
+    margin-top: 3px;
+  }
+
+  .player-row .player-skills .skill-item:hover {
+    background: var(--row-hover);
+  }
+
+  .player-row .player-skills .skill-item.skill-red {
+    color: var(--accent-2);
+    background: rgba(255,107,107,0.12);
+  }
+
+  .player-row .player-skills .skill-item.skill-red:hover {
+    background: rgba(255,107,107,0.2);
+  }
+
+  .player-row .player-skills .skill-item.skill-green {
+    color: var(--success);
+    background: rgba(53,214,143,0.12);
+  }
+
+  .player-row .player-skills .skill-item.skill-green:hover {
+    background: rgba(53,214,143,0.2);
+  }
+
+  .player-row .player-skills .skill-item.skill-yellow {
+    color: #e0c341;
+    background: rgba(224,195,65,0.14);
+  }
+
+  .player-row .player-skills .skill-item.skill-yellow:hover {
+    background: rgba(224,195,65,0.22);
+  }
+
+  .add-row-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .add-row-trigger:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(124,92,255,0.08);
+  }
+
+  .add-row-trigger .plus-icon {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .player-row.add-row {
+    border-color: var(--accent);
+    align-items: start;
+  }
+
+  .add-row .add-input {
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-family: inherit;
+    font-size: 12px;
+    width: 100%;
+    margin: 0;
+  }
+
+  .add-row .add-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(124,92,255,0.25);
+  }
+
+  .add-skills-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .add-skills-cell textarea {
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-family: inherit;
+    font-size: 12px;
+    width: 100%;
+    height: 48px;
+    margin: 0;
+    resize: vertical;
+  }
+
+  .add-skills-cell textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(124,92,255,0.25);
+  }
+
+  .add-row-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .add-row-actions button {
+    margin: 0;
+    padding: 5px 0;
+    font-size: 12px;
+  }
+
+  .add-row-actions button.danger:hover {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+  }
+
+  .chat {
+    height: 720px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 13px;
+    background: var(--input-bg);
+  }
+
+  .chat:empty::before {
+    content: "No raid messages yet — connect a channel to start listening.";
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+
+  .msg {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+  }
+
+  /* Zeatrise bot messages get a yellow highlight so they stand out from
+     regular [KUKORO] raid messages in the chat log. */
+  .msg.zeatrise {
+    background: rgba(255, 214, 0, 0.08);
+    border-color: rgba(255, 214, 0, 0.45);
+  }
+
+  .msg.zeatrise .chat-name {
+    color: var(--warn);
+  }
+
+  .tag {
+    color: var(--success);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.3px;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+  }
+
+  .name {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .msg .text {
+    color: var(--text);
+  }
+
+  .footer {
+    text-align: center;
+    padding: 14px;
+    font-size: 12px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+  }
+
+  .footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .footer a:hover {
+    text-decoration: underline;
+  }
+
+  .sidebar::-webkit-scrollbar, .chat::-webkit-scrollbar { width: 8px; }
+  .sidebar::-webkit-scrollbar-thumb, .chat::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
