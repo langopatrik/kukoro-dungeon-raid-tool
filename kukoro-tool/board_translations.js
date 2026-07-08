@@ -82,6 +82,13 @@ const BOARD_TRANSLATIONS = `
 
 👹 50% chance of crit. hit against enemy oni
 👹 Your hits ignore the defense of enemy oni
+👹 Defeating enemy oni will increase your defense 10%
+👹 Defeating enemy Wolf will increase your defense 10%
+👹 Dodge 90% of enemy oni's hits when you have 10hp or less
+👹 Dodge 90% of enemy Wolf's hits when you have 10hp or less
+
+👣 Dying by humanoid enemies also kills the opponent
+👣 Your defense will increase 10% each time you hit humanoid enemies as long as you have full life
 
 🔮 Baja 5 niveles a enemigos malditos antes de luchar
 🔮 Derrotar a enemigos malditos convertirá a las habilidades de un compañero al azar en superefectivas
@@ -107,8 +114,9 @@ const BOARD_TRANSLATIONS = `
 🥀 Nigromante
 🛡️ Tank
 ⚔️ Warrior
-
+🥀 Necromancer
 Berserk
+
 minotaur
 orc
 cyclops
@@ -124,6 +132,7 @@ goblin
 slime
 wolf
 oni
+humanoid
 Mixed (Esqueleto, Troll)
 Mixed (Goblin, Minotauro)
 Mixed (Shadow, Goblin)
