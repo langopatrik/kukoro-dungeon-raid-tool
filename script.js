@@ -994,7 +994,12 @@ function deriveFocusFromSkills(skills) {
 
   if (enemyTypes.length > 1) {
     const titleCase = t => t.charAt(0).toUpperCase() + t.slice(1);
-    return "Mixed (" + enemyTypes.map(titleCase).join(", ") + ")";
+    // Sort so the same set of focus types always yields the same string
+    // regardless of which skill happened to mention its enemy first —
+    // otherwise "Mixed (Goblin, Shadow)" vs "Mixed (Shadow, Goblin)" get
+    // logged (and exported) as two distinct strings for the same combo.
+    const sortedTypes = [...enemyTypes].sort((a, b) => a.localeCompare(b));
+    return "Mixed (" + sortedTypes.map(titleCase).join(", ") + ")";
   } else if (enemyTypes.length === 1) {
     return enemyTypes[0];
   }
