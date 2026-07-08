@@ -72,7 +72,7 @@ const I18N = {
     faq_title: "FAQ",
     close_faq_aria: "Close FAQ",
     faq_q1: "How do I start tracking a raid?",
-    faq_a1: 'Enter your Twitch channel name in the sidebar and click "Connect Chat". Once connected, raid messages will appear in the Chat tab and matching players will be added to the Board automatically.',
+    faq_a1: 'Enter a Twitch channel name that you would like to track in the sidebar and click "Connect Chat". Once connected, raid messages will appear in the Chat tab and matching players will be added to the Board automatically.',
     faq_q2: "Why aren't players showing up on the Board?",
     faq_a2: 'Make sure you\'re connected to the correct channel and that chat messages follow the expected raid message format. You can also paste raid messages directly into the "Player Data" box and click "Add Players" to add them manually.',
     faq_q3: "Can I set a boss type and dungeon level?",
