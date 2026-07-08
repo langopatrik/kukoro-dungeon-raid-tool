@@ -87,6 +87,12 @@ const BOARD_TRANSLATIONS = `
 🧜 Todo tu equipo recibirá nivel -1 si mueres por naga enemigo
 🧜 X0.5 damage received by enemy naga when the current minute is odd
 🧜 You will defend twice as much while you have low health against enemy naga
+🧜 Derrotar a naga enemigo duplicará la defensa de un compañero aleatorio
+🧜 Derrotar a naga enemigo invertirá la vida de un compañero aleatorio
+🧜 Esquiva el 90% de los golpes de naga enemigo si tienes 10hp o menos
+🧜 Morir por naga enemigo curará -50% la vida restante de tu equipo
+🧜 Recibe nivel -2 cuando fallas contra naga enemigo
+🧜 X0.5 de daño recibido por naga enemigo si el minuto es impar
 
 💀 0% prob. de golpe crítico a esqueleto enemigo
 💀 Daño x3 a esqueleto enemigo si tienes toda la vida
@@ -120,6 +126,27 @@ const BOARD_TRANSLATIONS = `
 😈 Reduce a 0 la agilidad de diablillo enemigo
 😈 Tu porcentaje de esquiva 2x como ataques hayas intercambiado con diablillo enemigo en ese combate
 
+😈 Absorbe el 99% del daño de diablillo enemigo si tienes vida impar
+😈 Daño x3 a diablillo enemigo si eres el último jugador vivo
+😈 Morir por diablillo enemigo matará a un compañero al azar
+😈 Recibe nivel +2 cuando fallas contra diablillo enemigo
+😈 X0.5 de daño recibido por diablillo enemigo cuando tienes más del 50% de la vida
+😈 X0.5 de daño recibido por diablillo enemigo de mayor nivel
+😈 X0.5 prob. de esquivar los ataques de diablillo enemigo
+😈 X0.75 de daño recibido por diablillo enemigo
+😈 X4 prob. de esquivar los ataques de diablillo enemigo si tienes menos del 50% de la vida
+
+🐲 100% de prob. de crítico a dragón enemigo si eres el último jugador vivo
+🐲 66% prob. de esquivar los ataques de dragón enemigo si tienes la vida completa
+🐲 Esquiva el 90% de los golpes de dragón enemigo si tienes 10hp o menos
+
+🧟 Cura ligeramente a tu equipo cuando golpeas a zombi enemigo
+🧟 Daño x1.5 a zombi enemigo
+🧟 Daño x3 a zombi enemigo si eres el último jugador vivo
+🧟 Derrotar a zombi enemigo duplicará la defensa de un compañero aleatorio
+🧟 Reduce a 0 la agilidad de zombi enemigo
+🧟 Tu defensa aumentará 10% cada vez que golpees a zombi enemigo mientras tengas toda la vida
+
 👣 Dying by humanoid enemies also kills the opponent
 👣 Your defense will increase 10% each time you hit humanoid enemies as long as you have full life
 
@@ -131,12 +158,20 @@ const BOARD_TRANSLATIONS = `
 
 🐾 Tus críticos a enemigos bestias subirán 3% tu defensa
 🐾 X0.5 prob. de esquivar los ataques de enemigos bestias
+🐾 Daño x2 tras recibir un crítico de enemigos bestias
+🐾 Tu barra de vida se invertirá tras derrotar a enemigos bestias
 
 😈 100% de prob. de crítico a diablillo enemigo si no ha muerto ningún jugador
 😈 Escaparás del combate si recibes un golpe crítico de diablillo enemigo
 
 🛡️ 20% prob. de que tus golpes curen a enemigos más resistentes
 🛡️ X0.5 de daño recibido por enemigos más resistentes si el minuto es impar
+🛡️ +66% de vida antes de luchar contra enemigos más resistentes
+🛡️ Baja 5 niveles a enemigos más resistentes antes de luchar
+🛡️ Defensa del 66% frente a enemigos más resistentes si no ha muerto ningún compañero
+🛡️ Derrotar a enemigos más resistentes invertirá la vida de un compañero aleatorio
+🛡️ Mata a enemigos más resistentes de un golpe si tienes 3hp o menos
+🛡️ Tus críticos harán x0.5 de daño a enemigos más resistentes
 
 ⚡ Crit. hits deal x0.5 damage against more agile enemies
 ⚡ Your critical hits at more agile enemies will raise 2% the defense of your team
@@ -168,6 +203,9 @@ oni
 humanoid
 araña
 minotauro
+bestias
+dragón
+zombi
 Mixed (Esqueleto, Troll)
 Mixed (Goblin, Minotauro)
 Mixed (Shadow, Goblin)
@@ -179,6 +217,10 @@ Mixed (Araña, Troll)
 Mixed (Diablillo, Minotauro)
 Mixed (Diablillo, Troll)
 Mixed (Minotauro, Troll)
+Mixed (Diablillo, Naga)
+Mixed (Diablillo, Zombi)
+Mixed (Dragón, Naga)
+Mixed (Naga, Zombi)
 resistenses
 
 
