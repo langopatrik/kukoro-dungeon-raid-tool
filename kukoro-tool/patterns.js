@@ -38,4 +38,5 @@ const FOCUS_KEYWORDS = [
   { language: "Spanish", phrase: "cualquier jefe",         focus: "jefe" },
   { language: "Spanish", phrase: "enemigos humanoides",         focus: "humanoides" },
   { language: "Spanish", phrase: "araña enemigo",         focus: "araña" },
+  { language: "Spanish", phrase: "enemigos bestias",         focus: "bestias" },
 ];
