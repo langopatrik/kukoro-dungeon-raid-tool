@@ -16,6 +16,7 @@ const BOARD_TRANSLATIONS = `
 🐗 Esquivar contra troll enemigo aumentará tu probabilidad de crítico
 🐗 Recibe nivel +2 cuando fallas contra troll enemigo
 🐗 Todo tu equipo recibirá nivel +3 si mueres por troll enemigo
+🐗 Tus críticos a troll enemigo subirán 2% la defensa a tu equipo
 
 🐸 Level -1 all your team if you die by enemy goblin
 🐸 Your hits ignore the defense of enemy goblin
@@ -31,6 +32,10 @@ const BOARD_TRANSLATIONS = `
 👁️ 100% chance of critical hit to enemy cyclops when you have odd health
 👁️ Kill enemy cyclops with one hit if you have 3hp or less
 👁️ You will run away from combat if you get under 20% hp in front of enemy cyclops
+👁️ 0% de daño a cíclope enemigo tras asestar un golpe de daño impar
+👁️ 100% de prob. de crítico a cíclope enemigo si eres el último jugador vivo
+👁️ Escaparás del combate si recibes un golpe crítico de cíclope enemigo
+👁️ Tus golpes ignoran la defensa de cíclope enemigo
 
 👻 X0.5 damage received by enemy shadow when the current minute is odd
 👻 Defeating enemy shadow will invert the healthbar of a random teammate
@@ -54,9 +59,15 @@ const BOARD_TRANSLATIONS = `
 
 💀 0% prob. de golpe crítico a esqueleto enemigo
 💀 Daño x3 a esqueleto enemigo si tienes toda la vida
+💀 Anula permanentemente la probabilidad de hacer críticos de esqueleto enemigo
+💀 Esquivar contra esqueleto enemigo te curará
+💀 Morir por esqueleto enemigo invertirá la vida a todos tus compañeros
 
 🦠 3% prob. de matar limo enemigo de un golpe
 🦠 Siempre harás crítico a limo enemigo si tienes menos del 50% de la vida
+
+🔮 Baja 5 niveles a enemigos malditos antes de luchar
+🔮 Derrotar a enemigos malditos convertirá a las habilidades de un compañero al azar en superefectivas
 
 🐾 Tus críticos a enemigos bestias subirán 3% tu defensa
 🐾 X0.5 prob. de esquivar los ataques de enemigos bestias
@@ -73,6 +84,7 @@ const BOARD_TRANSLATIONS = `
 🗡️ Rogue
 🗡️ Pícaro
 ☀️ Paladín
+🥀 Nigromante
 
 cyclops
 troll
@@ -82,6 +94,8 @@ diablillo
 naga
 esqueleto
 limo
+clope
+Mixed (Esqueleto, Troll)
 Mixed (Goblin, Minotauro)
 Mixed (Shadow, Goblin)
 Mixed (Goblin, Shadow)
