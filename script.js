@@ -9,7 +9,11 @@ const I18N = {
   en: {
     app_title: "Kukoro Dungeon Raid Player Data Tool",
     settings_title: "Settings",
-    translation_bell_title: "Board text ready to translate",
+    notifications_title: "Notifications",
+    notifications_panel_title: "Notifications",
+    notifications_clear_btn: "Clear all",
+    notifications_empty: "No notifications yet",
+    notif_board_text_pending: "{count} board text string(s) ready for translation",
     theme_label: "Theme",
     theme_btn_to_light: "Switch to Light Mode",
     theme_btn_to_dark: "Switch to Dark Mode",
@@ -68,7 +72,11 @@ const I18N = {
   es: {
     app_title: "Herramienta de Datos de Jugadores - Kukoro Dungeon Raid",
     settings_title: "Configuración",
-    translation_bell_title: "Texto del tablero listo para traducir",
+    notifications_title: "Notificaciones",
+    notifications_panel_title: "Notificaciones",
+    notifications_clear_btn: "Borrar todo",
+    notifications_empty: "Sin notificaciones",
+    notif_board_text_pending: "{count} cadena(s) de texto del tablero listas para traducir",
     theme_label: "Tema",
     theme_btn_to_light: "Cambiar a Modo Claro",
     theme_btn_to_dark: "Cambiar a Modo Oscuro",
@@ -127,7 +135,11 @@ const I18N = {
   fr: {
     app_title: "Outil de Données des Joueurs - Kukoro Dungeon Raid",
     settings_title: "Paramètres",
-    translation_bell_title: "Texte du tableau prêt à traduire",
+    notifications_title: "Notifications",
+    notifications_panel_title: "Notifications",
+    notifications_clear_btn: "Tout effacer",
+    notifications_empty: "Aucune notification",
+    notif_board_text_pending: "{count} chaîne(s) de texte du tableau prêtes à traduire",
     theme_label: "Thème",
     theme_btn_to_light: "Passer au Mode Clair",
     theme_btn_to_dark: "Passer au Mode Sombre",
@@ -186,7 +198,11 @@ const I18N = {
   de: {
     app_title: "Kukoro Dungeon Raid Spielerdaten-Tool",
     settings_title: "Einstellungen",
-    translation_bell_title: "Board-Text bereit zur Übersetzung",
+    notifications_title: "Benachrichtigungen",
+    notifications_panel_title: "Benachrichtigungen",
+    notifications_clear_btn: "Alle löschen",
+    notifications_empty: "Keine Benachrichtigungen",
+    notif_board_text_pending: "{count} Board-Textstring(s) bereit zur Übersetzung",
     theme_label: "Design",
     theme_btn_to_light: "Zu Hellem Modus wechseln",
     theme_btn_to_dark: "Zu Dunklem Modus wechseln",
@@ -245,7 +261,11 @@ const I18N = {
   ja: {
     app_title: "Kukoro ダンジョンレイド プレイヤーデータツール",
     settings_title: "設定",
-    translation_bell_title: "翻訳待ちのボードテキストがあります",
+    notifications_title: "通知",
+    notifications_panel_title: "通知",
+    notifications_clear_btn: "すべて消去",
+    notifications_empty: "通知はありません",
+    notif_board_text_pending: "翻訳待ちのボードテキストが{count}件あります",
     theme_label: "テーマ",
     theme_btn_to_light: "ライトモードに切り替え",
     theme_btn_to_dark: "ダークモードに切り替え",
@@ -337,6 +357,7 @@ function applyLanguage(lang) {
 
   updateThemeButtonLabel();
   updateTranslationBadge();
+  renderNotifPanel();
   updateStatusText();
   renderBoard();
 }
@@ -403,28 +424,165 @@ function getPendingBoardTextCount() {
   return pending;
 }
 
-// Reflects the pending count on the Settings-gear badge and the export
-// button itself. Called after every new logged string, on load, on
-// language change (since the button's label gets reset by the data-i18n
-// pass), and right after an export clears the count back to zero.
+// ---- Notification bell ----
+// A small persisted feed the bell icon exposes. Built generically so any
+// future event this tool wants to surface can just call addNotification()
+// — the board-text-pending entry below (the only event that exists today)
+// is just its first user. Each entry is {id, key, vars, timestamp}; when
+// `id` is provided, a later call with the same id replaces the existing
+// entry in place (moving it back to the top with a fresh timestamp) rather
+// than piling up duplicates — that's how "N strings pending" keeps a single
+// live row that updates as the count changes.
+const NOTIFICATIONS_KEY = "kukoro_notifications";
+
+function loadNotifications() {
+  try {
+    const raw = localStorage.getItem(NOTIFICATIONS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) { /* corrupt/missing — start fresh */ }
+  return [];
+}
+
+let notifications = loadNotifications();
+let notifPanelOpen = false;
+
+function persistNotifications() {
+  try {
+    localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(notifications));
+  } catch (e) { /* storage unavailable/full */ }
+}
+
+function addNotification(id, key, vars) {
+  if (id) notifications = notifications.filter(n => n.id !== id);
+  notifications.unshift({ id: id || null, key, vars: vars || {}, timestamp: Date.now() });
+  persistNotifications();
+  renderNotifPanel();
+  updateNotifBadge();
+}
+
+function removeNotification(id) {
+  const before = notifications.length;
+  notifications = notifications.filter(n => n.id !== id);
+  if (notifications.length !== before) {
+    persistNotifications();
+    renderNotifPanel();
+    updateNotifBadge();
+  }
+}
+
+function clearAllNotifications() {
+  notifications = [];
+  persistNotifications();
+  renderNotifPanel();
+  updateNotifBadge();
+}
+
+// Reflects the total notification count on the bell's badge, and lights up
+// the bell itself the same way it always has.
+function updateNotifBadge() {
+  const count = notifications.length;
+  const label = count > 99 ? "99+" : String(count);
+
+  const bellBtn = document.getElementById("translationBellBtn");
+  const badge = document.getElementById("bellNotifBadge");
+  if (badge) {
+    badge.textContent = label;
+    badge.classList.toggle("visible", count > 0);
+  }
+  if (bellBtn) {
+    bellBtn.classList.toggle("has-notifications", count > 0);
+  }
+}
+
+const NOTIF_LOCALES = { en: "en-US", es: "es-ES", fr: "fr-FR", de: "de-DE", ja: "ja-JP" };
+
+function formatNotifTime(timestamp) {
+  const locale = NOTIF_LOCALES[currentLang] || "en-US";
+  return new Date(timestamp).toLocaleString(locale, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
+// Rebuilds the dropdown's contents from `notifications` in their current
+// (newest-first, ungrouped) order. Called whenever the list changes and
+// whenever the active language changes, since each entry's text is built
+// from an i18n key rather than stored pre-translated.
+function renderNotifPanel() {
+  const list = document.getElementById("notifList");
+  if (!list) return;
+  list.innerHTML = "";
+
+  if (notifications.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "notif-empty";
+    empty.textContent = t("notifications_empty");
+    list.appendChild(empty);
+    return;
+  }
+
+  notifications.forEach(n => {
+    const item = document.createElement("div");
+    item.className = "notif-item";
+
+    const text = document.createElement("div");
+    text.className = "notif-item-text";
+    text.textContent = t(n.key, n.vars);
+
+    const time = document.createElement("div");
+    time.className = "notif-item-time";
+    time.textContent = formatNotifTime(n.timestamp);
+
+    item.appendChild(text);
+    item.appendChild(time);
+    list.appendChild(item);
+  });
+}
+
+function toggleNotifPanel() {
+  notifPanelOpen = !notifPanelOpen;
+  const panel = document.getElementById("notifPanel");
+  if (!panel) return;
+  if (notifPanelOpen) {
+    closeSettings();
+    renderNotifPanel();
+    panel.classList.add("open");
+  } else {
+    panel.classList.remove("open");
+  }
+}
+
+function closeNotifPanel() {
+  notifPanelOpen = false;
+  const panel = document.getElementById("notifPanel");
+  if (panel) panel.classList.remove("open");
+}
+
+// Closes the dropdown on any click outside the bell/panel, same idea as the
+// Settings modal's overlay-click handler.
+document.addEventListener("pointerdown", (e) => {
+  if (!notifPanelOpen) return;
+  if (e.target.closest(".bell-wrap")) return;
+  closeNotifPanel();
+});
+
+// Reflects the pending board-text count on the Settings export button, and
+// mirrors it as a single live bell notification (added/updated while
+// something's pending, removed once everything's been exported). Called
+// after every new logged string, on load, on language change (since the
+// export button's label gets reset by the data-i18n pass), and right after
+// an export clears the count back to zero.
 function updateTranslationBadge() {
   const pending = getPendingBoardTextCount();
   const label = pending > 99 ? "99+" : String(pending);
-
-  const bellBtn = document.getElementById("translationBellBtn");
-  const gearBadge = document.getElementById("bellNotifBadge");
-  if (gearBadge) {
-    gearBadge.textContent = label;
-    gearBadge.classList.toggle("visible", pending > 0);
-  }
-  if (bellBtn) {
-    bellBtn.classList.toggle("has-notifications", pending > 0);
-  }
 
   const exportBadge = document.getElementById("exportBadge");
   if (exportBadge) {
     exportBadge.textContent = label;
     exportBadge.style.display = pending > 0 ? "inline-block" : "none";
+  }
+
+  if (pending > 0) {
+    addNotification("board_text_pending", "notif_board_text_pending", { count: pending });
+  } else {
+    removeNotification("board_text_pending");
   }
 }
 
@@ -1463,6 +1621,7 @@ function toggleSidebar() {
 }
 
 function openSettings() {
+  closeNotifPanel();
   document.getElementById("settingsOverlay").classList.add("open");
 }
 
@@ -1658,4 +1817,9 @@ applyTheme(savedTheme);
 // in case the page was reloaded (or reopened days later) with a pending
 // count already sitting in localStorage.
 updateTranslationBadge();
+
+// Reflect whatever notifications (translation-related or otherwise)
+// already persisted from a previous visit.
+updateNotifBadge();
+renderNotifPanel();
 

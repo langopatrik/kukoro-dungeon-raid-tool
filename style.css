@@ -321,6 +321,100 @@
     font-weight: 700;
   }
 
+  /* Bell button + its notification dropdown. The wrapper is the positioning
+     context so the panel hangs directly under the bell instead of being
+     centered on screen like the Settings modal. */
+  .bell-wrap {
+    position: relative;
+  }
+
+  .notif-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 320px;
+    max-height: 380px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px var(--shadow-modal);
+    z-index: 100;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .notif-panel.open {
+    display: flex;
+  }
+
+  .notif-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .notif-clear-btn {
+    display: inline-block;
+    width: auto;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+
+  .notif-clear-btn:hover {
+    background: none;
+    border-color: transparent;
+    color: var(--accent-2);
+  }
+
+  .notif-list {
+    overflow-y: auto;
+  }
+
+  /* Newest notification is always prepended, so top-of-list == most recent
+     with no separate grouping/sorting logic needed at render time. */
+  .notif-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .notif-item:last-child {
+    border-bottom: none;
+  }
+
+  .notif-item-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .notif-item-time {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .notif-empty {
+    padding: 24px 14px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
   .modal-overlay {
     display: none;
     position: fixed;
