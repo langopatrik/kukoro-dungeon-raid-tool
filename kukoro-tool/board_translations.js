@@ -36,6 +36,8 @@ const BOARD_TRANSLATIONS = `
 👁️ 100% de prob. de crítico a cíclope enemigo si eres el último jugador vivo
 👁️ Escaparás del combate si recibes un golpe crítico de cíclope enemigo
 👁️ Tus golpes ignoran la defensa de cíclope enemigo
+👁️ Damage x5 against enemy cyclops if you have never been damaged
+👁️ Dodge 90% of enemy cyclops's hits when you have 10hp or less
 
 👻 X0.5 damage received by enemy shadow when the current minute is odd
 👻 Defeating enemy shadow will invert the healthbar of a random teammate
@@ -53,9 +55,13 @@ const BOARD_TRANSLATIONS = `
 
 🐮 Dying by enemy minotaur will reverse all your teammates health
 🐮 Absorbe el 99% del daño de minotauro enemigo si tienes vida impar
+🐮 Damage x3 against enemy minotaur if you are the last player alive
+🐮 Your defense against enemy minotaur will be 100% as long as you have 10hp or less
 
 🧜 Devuelve los golpes críticos a naga enemigo
 🧜 Todo tu equipo recibirá nivel -1 si mueres por naga enemigo
+🧜 X0.5 damage received by enemy naga when the current minute is odd
+🧜 You will defend twice as much while you have low health against enemy naga
 
 💀 0% prob. de golpe crítico a esqueleto enemigo
 💀 Daño x3 a esqueleto enemigo si tienes toda la vida
@@ -68,6 +74,9 @@ const BOARD_TRANSLATIONS = `
 
 🔮 Baja 5 niveles a enemigos malditos antes de luchar
 🔮 Derrotar a enemigos malditos convertirá a las habilidades de un compañero al azar en superefectivas
+
+🦁 100% chance of critical against enemy orc if you are the last player alive
+🦁 Crit. hits deal x3 damage against enemy orc
 
 🐾 Tus críticos a enemigos bestias subirán 3% tu defensa
 🐾 X0.5 prob. de esquivar los ataques de enemigos bestias
@@ -85,7 +94,11 @@ const BOARD_TRANSLATIONS = `
 🗡️ Pícaro
 ☀️ Paladín
 🥀 Nigromante
+🛡️ Tank
 
+Berserk
+minotaur
+orc
 cyclops
 troll
 spider
