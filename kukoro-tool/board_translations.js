@@ -136,6 +136,8 @@ const BOARD_TRANSLATIONS = `
 💀 Anula permanentemente la probabilidad de hacer críticos de esqueleto enemigo
 💀 Esquivar contra esqueleto enemigo te curará
 💀 Morir por esqueleto enemigo invertirá la vida a todos tus compañeros
+💀 Daño x5 a esqueleto enemigo si nunca has recibido daño
+💀 Esquiva el 90% de los golpes de esqueleto enemigo si tienes 10hp o menos
 
 🦠 Always crit. enemy slime when you are under 50% hp
 🦠 Your dodge percentage will 2x number of attacks you have exchanged with enemy slime in that fight
@@ -170,6 +172,11 @@ const BOARD_TRANSLATIONS = `
 👹 Defeating enemy oni will increase your defense 10%
 👹 Dodge 90% of enemy oni's hits when you have 10hp or less
 
+👹 100% de prob. de crítico a oni enemigo si no ha muerto ningún jugador
+👹 Derrotar a oni enemigo te recuperará el 66% de vida
+👹 Escaparás del combate si recibes un golpe crítico de oni enemigo
+👹 X0.5 de daño recibido por oni enemigo cuando tienes más del 50% de la vida
+
 😈 0% de daño a diablillo enemigo tras asestar un golpe de daño impar
 😈 100% de prob. de crítico a diablillo enemigo si eres el último jugador vivo
 😈 Absorbe el 99% del daño de diablillo enemigo si tienes vida impar
@@ -203,6 +210,7 @@ const BOARD_TRANSLATIONS = `
 😈 Siempre harás crítico a diablillo enemigo si tienes más del 50% de la vida
 😈 Tus golpes ignoran la defensa de diablillo enemigo
 😈 Un aliado aleatorio recibirá los golpes que falles contra diablillo enemigo
+😈 Tu defensa aumentará 1% cada vez que golpees a diablillo enemigo
 
 🐲 100% de prob. de crítico a dragón enemigo si eres el último jugador vivo
 🐲 66% prob. de esquivar los ataques de dragón enemigo si tienes la vida completa
@@ -246,6 +254,9 @@ const BOARD_TRANSLATIONS = `
 🐾 Daño x2 tras recibir un crítico de enemigos bestias
 🐾 Tu barra de vida se invertirá tras derrotar a enemigos bestias
 
+👑 +66% de vida antes de luchar contra cualquier jefe
+👑 Tu defensa frente a cualquier jefe será del 100% mientras tengas 10hp o menos
+
 🛡️ 20% prob. de que tus golpes curen a enemigos más resistentes
 🛡️ X0.5 de daño recibido por enemigos más resistentes si el minuto es impar
 🛡️ +66% de vida antes de luchar contra enemigos más resistentes
@@ -274,6 +285,7 @@ const BOARD_TRANSLATIONS = `
 ⚔️ Warrior
 🥀 Necromancer
 Berserk
+Berserker
 
 minotaur
 orc
@@ -302,6 +314,7 @@ lobo
 rgola
 sombra
 resistenses
+jefe
 Mixed (Esqueleto, Troll)
 Mixed (Goblin, Minotauro)
 Mixed (Shadow, Goblin)
