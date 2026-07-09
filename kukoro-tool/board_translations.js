@@ -100,6 +100,9 @@ const BOARD_TRANSLATIONS = `
 👻 Los críticos a sombra enemigo aumentarán tu daño base
 👻 Reduce la agilidad de tu equipo cuando fallas contra sombra enemigo
 👻 Resiste los golpes mortales de sombra enemigo si tienes más de 1 de vida
+👻 +66% de vida antes de luchar contra sombra enemigo
+👻 X0.5 de daño recibido por sombra enemigo cuando tienes más del 50% de la vida
+👻 X0.5 de daño recibido por sombra enemigo de mayor nivel
 
 👑 0% damage after hitting odd damage to any boss
 👑 Distribute health to your teammates the same damage you received from any boss
@@ -162,6 +165,9 @@ const BOARD_TRANSLATIONS = `
 🧜 Los críticos a naga enemigo aumentarán tu daño base
 🧜 Reduce a 0 la defensa de naga enemigo al que te enfrentes
 🧜 X0.75 de daño recibido por naga enemigo
+🧜 Daño x5 a naga enemigo si nunca has recibido daño
+🧜 Esquivar contra naga enemigo te curará
+🧜 Siempre harás crítico a naga enemigo si tienes más del 50% de la vida
 
 💀 100% chance of critical hit to enemy skeleton when you have odd health
 💀 Attacking first against enemy skeleton will deal x3 damage
@@ -234,6 +240,11 @@ const BOARD_TRANSLATIONS = `
 🐺 Morir por lobo enemigo restaurará la vida completa al enemigo
 🐺 Tu barra de vida se invertirá tras derrotar a lobo enemigo
 🐺 X4 prob. de esquivar los ataques de lobo enemigo si tienes menos del 50% de la vida
+🐺 Daño x2 a lobo enemigo tras asestarle un golpe de daño impar
+🐺 Derrotar a lobo enemigo te recuperará el 66% de vida
+🐺 Siempre harás crítico a lobo enemigo si tienes más del 50% de la vida
+🐺 Tu defensa aumentará 1% cada vez que golpees a lobo enemigo
+🐺 Tu defensa aumentará 10% cada vez que golpees a lobo enemigo mientras tengas toda la vida
 
 👹 50% chance of crit. hit against enemy oni
 👹 Your hits ignore the defense of enemy oni
@@ -323,6 +334,12 @@ const BOARD_TRANSLATIONS = `
 🗿 Recupera la vida antes de morir por gárgola enemigo a costa de absorber la vida de un compañero aleatorio
 🗿 Tu nivel se igualará a cualquier gárgola enemigo que luches
 🗿 X1.25 de daño recibido por gárgola enemigo
+🗿 Daño x3 a gárgola enemigo si no ha muerto ningún jugador
+🗿 Daño x3 a gárgola enemigo si tienes toda la vida
+🗿 Defensa del 75% frente a gárgola enemigo si eres el último jugador vivo
+🗿 Siempre harás crítico a gárgola enemigo si tienes más del 50% de la vida
+🗿 Tu defensa frente a gárgola enemigo será del 100% mientras tengas 10hp o menos
+🗿 X0.75 de daño recibido por gárgola enemigo
 
 👣 Dying by humanoid enemies also kills the opponent
 👣 Your defense will increase 10% each time you hit humanoid enemies as long as you have full life
@@ -428,11 +445,13 @@ const BOARD_TRANSLATIONS = `
 
 🗡️ Rogue
 🗡️ Pícaro
+☀️ Paladin
 ☀️ Paladín
 🥀 Nigromante
 🛡️ Tank
 🛡️ Tanque
 ⚔️ Warrior
+⚔️ Guerrero
 🥀 Necromancer
 Berserk
 Berserker
