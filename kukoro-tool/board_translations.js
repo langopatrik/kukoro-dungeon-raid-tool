@@ -300,6 +300,7 @@ humanoides
 lobo
 rgola
 sombra
+resistenses
 Mixed (Esqueleto, Troll)
 Mixed (Goblin, Minotauro)
 Mixed (Shadow, Goblin)
@@ -326,7 +327,6 @@ Mixed (Diablillo, Sombra)
 Mixed (Goblin, Lobo)
 Mixed (Goblin, Zombi)
 Mixed (Limo, Rgola)
-resistenses
 
 
 
