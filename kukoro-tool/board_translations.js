@@ -39,12 +39,13 @@ const BOARD_TRANSLATIONS = `
 👁️ 100% chance of critical hit to enemy cyclops when you have odd health
 👁️ Kill enemy cyclops with one hit if you have 3hp or less
 👁️ You will run away from combat if you get under 20% hp in front of enemy cyclops
+👁️ Damage x5 against enemy cyclops if you have never been damaged
+👁️ Dodge 90% of enemy cyclops's hits when you have 10hp or less
+
 👁️ 0% de daño a cíclope enemigo tras asestar un golpe de daño impar
 👁️ 100% de prob. de crítico a cíclope enemigo si eres el último jugador vivo
 👁️ Escaparás del combate si recibes un golpe crítico de cíclope enemigo
 👁️ Tus golpes ignoran la defensa de cíclope enemigo
-👁️ Damage x5 against enemy cyclops if you have never been damaged
-👁️ Dodge 90% of enemy cyclops's hits when you have 10hp or less
 
 👻 X0.5 damage received by enemy shadow when the current minute is odd
 👻 Defeating enemy shadow will invert the healthbar of a random teammate
@@ -59,6 +60,7 @@ const BOARD_TRANSLATIONS = `
 
 🕷️ X0.5 chance of dodging enemy spider attacks
 🕷️ X0.75 enemy spider damage on you
+
 🕷️ 20% prob. de que tus golpes curen a araña enemigo
 🕷️ 50% prob. de golpe crítico a araña enemigo
 🕷️ Daño x0.7 a araña enemigo
@@ -71,9 +73,10 @@ const BOARD_TRANSLATIONS = `
 🕷️ Un aliado aleatorio recibirá los golpes que falles contra araña enemigo
 
 🐮 Dying by enemy minotaur will reverse all your teammates health
-🐮 Absorbe el 99% del daño de minotauro enemigo si tienes vida impar
 🐮 Damage x3 against enemy minotaur if you are the last player alive
 🐮 Your defense against enemy minotaur will be 100% as long as you have 10hp or less
+
+🐮 Absorbe el 99% del daño de minotauro enemigo si tienes vida impar
 🐮 50% prob. de golpe crítico a minotauro enemigo
 🐮 66% prob. de esquivar los ataques de minotauro enemigo si tienes la vida completa
 🐮 Daño x3 a minotauro enemigo que haya matado a un compañero
@@ -100,10 +103,11 @@ const BOARD_TRANSLATIONS = `
 💀 Esquivar contra esqueleto enemigo te curará
 💀 Morir por esqueleto enemigo invertirá la vida a todos tus compañeros
 
-🦠 3% prob. de matar limo enemigo de un golpe
-🦠 Siempre harás crítico a limo enemigo si tienes menos del 50% de la vida
 🦠 Always crit. enemy slime when you are under 50% hp
 🦠 Your dodge percentage will 2x number of attacks you have exchanged with enemy slime in that fight
+
+🦠 3% prob. de matar limo enemigo de un golpe
+🦠 Siempre harás crítico a limo enemigo si tienes menos del 50% de la vida
 
 🐺 Always dodge the first attack of enemy wolf
 🐺 Defeating enemy wolf will increase your defense 10%
