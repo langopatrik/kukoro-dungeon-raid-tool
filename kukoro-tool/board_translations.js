@@ -114,10 +114,11 @@ const BOARD_TRANSLATIONS = `
 🐮 Reduce a 0 la agilidad de minotauro enemigo
 🐮 Tu defensa frente a minotauro enemigo será del 100% mientras tengas 10hp o menos
 
-🧜 Devuelve los golpes críticos a naga enemigo
-🧜 Todo tu equipo recibirá nivel -1 si mueres por naga enemigo
 🧜 X0.5 damage received by enemy naga when the current minute is odd
 🧜 You will defend twice as much while you have low health against enemy naga
+
+🧜 Devuelve los golpes críticos a naga enemigo
+🧜 Todo tu equipo recibirá nivel -1 si mueres por naga enemigo
 🧜 Derrotar a naga enemigo duplicará la defensa de un compañero aleatorio
 🧜 Derrotar a naga enemigo invertirá la vida de un compañero aleatorio
 🧜 Esquiva el 90% de los golpes de naga enemigo si tienes 10hp o menos
@@ -288,30 +289,41 @@ Berserk
 Berserker
 
 minotaur
+minotauro
 orc
+orco
 cyclops
+cíclope
 troll
 spider
+araña
 shadow
+sombra
+imp
 diablillo
 naga
+skeleton
 esqueleto
+slime
 limo
 goblin
-slime
 wolf
+lobo
 oni
 humanoid
-araña
-minotauro
+humanoides
 bestias
+dragon
 dragón
+zombie
 zombi
 cursed
-humanoides
-lobo
-sombra
+malditos
+gargoyle
+gárgola
+tougher
 resistenses
+boss
 jefe
 Mixed (Esqueleto, Troll)
 Mixed (Goblin, Minotauro)
