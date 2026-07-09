@@ -1137,7 +1137,12 @@ function deriveFocusFromSkills(skills) {
     // troll"). Spanish reverses that order and uses "enemigo" (e.g. "troll
     // enemigo"), so try both patterns.
     if (!type) {
-      const fm = skill.text.match(/enemy (\w+)/i) || skill.text.match(/(\w+)\s+enemigo/i);
+      // Plain \w doesn't include accented letters (á, é, í, ó, ú, ñ), so on
+      // Spanish text like "gárgola enemigo" it only matched the tail of the
+      // word after the accent ("rgola") instead of the whole thing. Using a
+      // Unicode letter/number class instead of \w fixes that for both the
+      // English and Spanish orderings.
+      const fm = skill.text.match(/enemy ([\p{L}\p{N}_]+)/iu) || skill.text.match(/([\p{L}\p{N}_]+)\s+enemigo/iu);
       if (fm) type = fm[1].toLowerCase();
     }
 
