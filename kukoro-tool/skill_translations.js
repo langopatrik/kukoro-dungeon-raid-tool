@@ -42,7 +42,7 @@ const ROLE_TRANSLATIONS = [
   { en: "Paladin", es: "Paladín" },
   { en: "Necromancer", es: "Nigromante" },
   { en: "Tank", es: "Tanque" },
-  { en: "Warrior", es: "" },
+  { en: "Warrior", es: "Guerrero" },
   { en: "Berserker", es: "" },
 ];
 
@@ -73,6 +73,7 @@ const FOCUS_TRANSLATIONS = [
   { en: "zombie", es: "zombi" },
   { en: "cursed", es: "malditos" },
   { en: "gargoyle", es: "gárgola" },
+  { en: "lizard", es: "lizardo" },
   { en: "boss", es: "jefe" },
   { en: "tougher", es: "resistentes" },
 ];
