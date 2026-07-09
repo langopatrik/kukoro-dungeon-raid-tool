@@ -123,7 +123,6 @@ const BOARD_TRANSLATIONS = `
 😈 Morir por diablillo enemigo reasignará los enemigos a los que afectan las habilidades de tu equipo
 😈 Reduce a 0 la agilidad de diablillo enemigo
 😈 Tu porcentaje de esquiva 2x como ataques hayas intercambiado con diablillo enemigo en ese combate
-
 😈 Absorbe el 99% del daño de diablillo enemigo si tienes vida impar
 😈 Daño x3 a diablillo enemigo si eres el último jugador vivo
 😈 Morir por diablillo enemigo matará a un compañero al azar
@@ -133,6 +132,8 @@ const BOARD_TRANSLATIONS = `
 😈 X0.5 prob. de esquivar los ataques de diablillo enemigo
 😈 X0.75 de daño recibido por diablillo enemigo
 😈 X4 prob. de esquivar los ataques de diablillo enemigo si tienes menos del 50% de la vida
+😈 100% de prob. de crítico a diablillo enemigo si no ha muerto ningún jugador
+😈 Escaparás del combate si recibes un golpe crítico de diablillo enemigo
 
 🐲 100% de prob. de crítico a dragón enemigo si eres el último jugador vivo
 🐲 66% prob. de esquivar los ataques de dragón enemigo si tienes la vida completa
@@ -158,9 +159,6 @@ const BOARD_TRANSLATIONS = `
 🐾 X0.5 prob. de esquivar los ataques de enemigos bestias
 🐾 Daño x2 tras recibir un crítico de enemigos bestias
 🐾 Tu barra de vida se invertirá tras derrotar a enemigos bestias
-
-😈 100% de prob. de crítico a diablillo enemigo si no ha muerto ningún jugador
-😈 Escaparás del combate si recibes un golpe crítico de diablillo enemigo
 
 🛡️ 20% prob. de que tus golpes curen a enemigos más resistentes
 🛡️ X0.5 de daño recibido por enemigos más resistentes si el minuto es impar
