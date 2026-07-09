@@ -58,7 +58,7 @@ const FOCUS_TRANSLATIONS = [
   { en: "skeleton", es: "esqueleto" },
   { en: "humanoid", es: "humanoides" },
   { en: "boss", es: "jefe" },
-  { en: "tougher", es: "resistenses" },
+  { en: "tougher", es: "resistentes" },
 ];
 
 // The board builds a combined focus label like "Mixed (Goblin, Shadow)" when
@@ -88,7 +88,7 @@ const SKILL_TRANSLATIONS = [
   // 🐸 Goblin
   { en: "Level -1 all your team if you die by enemy goblin", es: "" },
   { en: "Your hits ignore the defense of enemy goblin", es: "" },
-  { en: "Decrease your team's agility when you miss against enemy goblin", es: "" },
+  { en: "Decrease your team agility when you miss against enemy goblin", es: "" },
   { en: "X0.5 chance of dodging enemy goblin's attacks", es: "X0.5 prob. de esquivar los ataques de goblin enemigo" },
   { en: "X0.5 damage received by enemy goblin when the current minute is odd", es: "" },
   { en: "Your defense will increase 10% each time you hit enemy goblin as long as you have full life", es: "" },
@@ -112,13 +112,13 @@ const SKILL_TRANSLATIONS = [
   { en: "X0.5 damage received by enemy shadow when the current minute is odd", es: "" },
   { en: "Defeating enemy shadow will invert the healthbar of a random teammate", es: "" },
   { en: "50% chance to kill enemy shadow with one hit if you have 10hp or less", es: "" },
-  { en: "Distribute to your teammates the same damage you received from enemy shadow", es: "" },
-  { en: "Slightly heals your team every time you hit enemy shadow", es: "" },
-  { en: "Your level will become the same as the enemy shadow you fight", es: "" },
+  { en: "Distribute health to your teammates the same damage you received from enemy shadow", es: "" },
+  { en: "Slightly heals your team everytime you hit enemy shadow", es: "" },
+  { en: "Your level will become the same level of enemy shadow you fight", es: "" },
 
   // 👑 Any boss
   { en: "0% damage after hitting odd damage to any boss", es: "" },
-  { en: "Distribute to your teammates the same damage you received from any boss", es: "" },
+  { en: "Distribute health to your teammates the same damage you received from any boss", es: "" },
 
   // 🕷️ Spider
   { en: "X0.5 chance of dodging enemy spider attacks", es: "" },
@@ -135,7 +135,7 @@ const SKILL_TRANSLATIONS = [
   { en: "", es: "Un aliado aleatorio recibirá los golpes que falles contra araña enemigo" },
 
   // 🐮 Minotaur
-  { en: "Dying by enemy minotaur will reverse all your teammates' health", es: "" },
+  { en: "Dying by enemy minotaur will reverse all your teammates health", es: "" },
   { en: "Damage x3 against enemy minotaur if you are the last player alive", es: "" },
   { en: "Your defense against enemy minotaur will be 100% as long as you have 10hp or less", es: "Tu defensa frente a minotauro enemigo será del 100% mientras tengas 10hp o menos" },
   { en: "", es: "Absorbe el 99% del daño de minotauro enemigo si tienes vida impar" },
@@ -150,7 +150,7 @@ const SKILL_TRANSLATIONS = [
   // 🧜 Naga
   { en: "", es: "Devuelve los golpes críticos a naga enemigo" },
   { en: "", es: "Todo tu equipo recibirá nivel -1 si mueres por naga enemigo" },
-  { en: "X0.5 damage received by enemy naga when the current minute is odd", es: "X0.5 de daño recibido de naga enemigo cuando el minuto actual es impar" },
+  { en: "X0.5 damage received by enemy naga when the current minute is odd", es: "X0.5 de daño recibido por naga enemigo si el minuto es impar" },
   { en: "You will defend twice as much while you have low health against enemy naga", es: "" },
   { en: "", es: "Derrotar a naga enemigo duplicará la defensa de un compañero aleatorio" },
   { en: "", es: "Derrotar a naga enemigo invertirá la vida de un compañero aleatorio" },
@@ -168,7 +168,7 @@ const SKILL_TRANSLATIONS = [
   // 🦠 Slime
   { en: "3% chance to kill enemy slime with one hit", es: "" },
   { en: "Always crit. enemy slime when you are under 50% hp", es: "Siempre harás crítico a limo enemigo si tienes menos del 50% de la vida" },
-  { en: "Your dodge percentage will 2x the number of attacks you have exchanged with enemy slime in that fight", es: "" },
+  { en: "Your dodge percentage will 2x number of attacks you have exchanged with enemy slime in that fight", es: "" },
 
   // 🐺 Wolf
   { en: "Always dodge the first attack of enemy wolf", es: "" },
