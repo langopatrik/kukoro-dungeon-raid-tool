@@ -41,9 +41,9 @@ const ROLE_TRANSLATIONS = [
   { en: "Rogue", es: "Pícaro" },
   { en: "Paladin", es: "Paladín" },
   { en: "Necromancer", es: "Nigromante" },
-  { en: "Tank", es: "" },
+  { en: "Tank", es: "Tanque" },
   { en: "Warrior", es: "" },
-  { en: "Berserk", es: "" },
+  { en: "Berserker", es: "" },
 ];
 
 // ---- Focus / creature names ----
@@ -54,11 +54,24 @@ const ROLE_TRANSLATIONS = [
 // shadow, oni, wolf, orc, diablillo) is written the same way in both
 // languages already, so no entry is needed for those.
 const FOCUS_TRANSLATIONS = [
-  { en: "cyclops", es: "cíclope" },
   { en: "minotaur", es: "minotauro" },
+  { en: "orc", es: "orco" },
+  { en: "cyclops", es: "cíclope" },
+  { en: "troll", es: "troll" },
   { en: "spider", es: "araña" },
-  { en: "slime", es: "limo" },
+  { en: "shadow", es: "sombra" },
+  { en: "imp", es: "diablillo" },
+  { en: "naga", es: "naga" }, 
   { en: "skeleton", es: "esqueleto" },
+  { en: "slime", es: "limo" },
+  { en: "goblin", es: "goblin" },
+  { en: "wolf", es: "lobo" },
+  { en: "oni", es: "oni" },  
+  { en: "humanoid", es: "humanoides" },  
+  { en: "beasts", es: "bestias" },  
+  { en: "dragon", es: "dragón" },
+  { en: "zombie", es: "zombi" },
+  { en: "cursed", es: "malditos" },
   { en: "humanoid", es: "humanoides" },
   { en: "boss", es: "jefe" },
   { en: "tougher", es: "resistentes" },
