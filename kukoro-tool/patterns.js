@@ -41,4 +41,5 @@ const FOCUS_KEYWORDS = [
   { language: "Spanish", phrase: "araña enemigo",         focus: "araña" },
   { language: "Spanish", phrase: "enemigos bestias",         focus: "bestias" },
   { language: "Spanish", phrase: "enemigos malditos",         focus: "malditos" },
+  { language: "Spanish", phrase: "cíclope enemigo",         focus: "cíclope" },
 ];
