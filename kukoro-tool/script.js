@@ -990,6 +990,125 @@ try {
   STRONG_FOCUS_PATTERNS = [];
 }
 
+// ---- Board content translation (English <-> Spanish) ----
+// The primary dictionary lives in skill_translations.js. This turns it
+// into lookup maps — one for translating EN text to ES, one for ES to EN —
+// built once on load. If no complete translation exists in
+// skill_translations.js, the original board text is shown unchanged.
+// Lookups are case-insensitive since board text can vary in capitalization
+// (e.g. "Defeating enemy Wolf" vs "enemy wolf").
+let BOARD_TRANSLATION_MAPS = { enToEs: new Map(), esToEn: new Map() };
+
+// Turns a list of {en, es} lists into enToEs/esToEn lookup maps, keeping
+// only pairs where BOTH sides are filled in — a pair with one side left ""
+// isn't a usable translation, so it's simply skipped when building a map.
+function buildTranslationMapsFrom(lists) {
+  const enToEs = new Map();
+  const esToEn = new Map();
+
+  const addPair = (en, es) => {
+    if (!en || !es) return; // one side left blank in the data file — skip
+    const enKey = en.trim().toLowerCase();
+    const esKey = es.trim().toLowerCase();
+    if (!enToEs.has(enKey)) enToEs.set(enKey, es);
+    if (!esToEn.has(esKey)) esToEn.set(esKey, en);
+  };
+
+  lists.forEach(list => {
+    if (list) list.forEach(({ en, es }) => addPair(en, es));
+  });
+
+  return { enToEs, esToEn };
+}
+
+function buildBoardTranslationMaps() {
+  const primaryLists = [
+    typeof ROLE_TRANSLATIONS !== "undefined" ? ROLE_TRANSLATIONS : null,
+    typeof FOCUS_TRANSLATIONS !== "undefined" ? FOCUS_TRANSLATIONS : null,
+    typeof SKILL_TRANSLATIONS !== "undefined" ? SKILL_TRANSLATIONS : null,
+  ];
+
+  BOARD_TRANSLATION_MAPS = buildTranslationMapsFrom(primaryLists);
+}
+buildBoardTranslationMaps();
+
+// The Mixed label translation only draws from MIXED_LABEL_TRANSLATION in
+// skill_translations.js; no autofil fallback is allowed.
+function resolveMixedLabelTranslation() {
+  const primary = typeof MIXED_LABEL_TRANSLATION !== "undefined" ? MIXED_LABEL_TRANSLATION : null;
+  return {
+    en: (primary && primary.en) || "Mixed",
+    es: (primary && primary.es) || "",
+  };
+}
+const MIXED_LABEL_RESOLVED = resolveMixedLabelTranslation();
+
+// Skill/role text captured off the board (from raid chat messages) carries
+// a leading enemy-type emoji — e.g. "🐗 Esquivar contra troll enemigo te
+// curará" or "🗡️ Rogue" — the same way board_translations.js lines do. The
+// dictionary in skill_translations.js stores just the plain sentence with
+// no emoji ({ es: "Esquivar contra troll enemigo te curará" }), so a
+// lookup on the raw board text would never match. This splits the emoji off
+// first so the lookup runs on text that actually matches the dictionary's
+// format, then the emoji is glued back onto whatever ends up displayed
+// (translated or not) so the board keeps showing the same icon it always did.
+// \p{Extended_Pictographic} covers emoji including multi-codepoint ones
+// with a trailing variation selector (\uFE0F), like the dagger in "🗡️".
+const LEADING_EMOJI_RE = /^(?:\p{Extended_Pictographic}\uFE0F?)+\s*/u;
+
+function splitLeadingEmoji(str) {
+  const match = str.match(LEADING_EMOJI_RE);
+  if (!match) return { prefix: "", rest: str };
+  return { prefix: match[0], rest: str.slice(match[0].length) };
+}
+
+// Translates a single role/focus/skill string for display in `lang`
+// ("en" or "es"). If the string isn't found in either direction of the
+// dictionary — or `lang` isn't "en"/"es" — the original text is returned
+// unchanged, exactly as it was parsed off the board (emoji prefix and all).
+function translateBoardString(str, lang) {
+  if (!str) return str;
+  const trimmed = String(str).trim();
+  if (!trimmed) return str;
+
+  const { prefix, rest } = splitLeadingEmoji(trimmed);
+  const key = rest.trim().toLowerCase();
+
+  if (lang === "es" && BOARD_TRANSLATION_MAPS.enToEs.has(key)) {
+    return prefix + BOARD_TRANSLATION_MAPS.enToEs.get(key);
+  }
+  if (lang === "en" && BOARD_TRANSLATION_MAPS.esToEn.has(key)) {
+    return prefix + BOARD_TRANSLATION_MAPS.esToEn.get(key);
+  }
+  return str;
+}
+
+// Focus labels are either a single creature word ("goblin") or, when a
+// player's skills target more than one creature, a generated
+// "Mixed (A, B)" combo. Translating the whole "Mixed (...)" string as one
+// lookup would never match anything in the dictionary (it's assembled at
+// render time, not a fixed phrase), so it's handled specially here:
+// translate the "Mixed" label and each creature name inside the
+// parentheses individually, then reassemble.
+function translateFocus(focus, lang) {
+  if (!focus) return focus;
+  if (lang !== "en" && lang !== "es") return focus;
+
+  const mixedMatch = focus.match(/^(mixed)\s*\((.+)\)$/i);
+  if (mixedMatch) {
+    const mixedLabel = lang === "es" ? MIXED_LABEL_RESOLVED.es : MIXED_LABEL_RESOLVED.en;
+    const names = mixedMatch[2].split(",").map(n => n.trim());
+    const translatedNames = names.map(name => {
+      const translated = translateBoardString(name, lang);
+      // Keep the original Title Case styling ("Goblin", not "goblin").
+      return translated.charAt(0).toUpperCase() + translated.slice(1);
+    });
+    return `${mixedLabel} (${translatedNames.join(", ")})`;
+  }
+
+  return translateBoardString(focus, lang);
+}
+
 // Single source of truth for a player's focus: scans skill text for a
 // strong literal pattern first, falling back to the weak "enemy X" pattern
 // only when no strong pattern matches, then combines distinct types found
@@ -1358,7 +1477,8 @@ function renderBoard() {
             : s.highlight === "red" ? " skill-red" : s.highlight === "green" ? " skill-green" : "";
           const title = isFocusPlaceholder ? t("skill_placeholder_title") : t("skill_highlight_title");
           if (!isFocusPlaceholder) logBoardText(s.text);
-          return `<div class="skill-item${highlightClass}" data-name="${escapeHtml(name)}" data-index="${i}" title="${title}"><span class="skill-num">${i + 1}.</span>${escapeHtml(s.text)}</div>`;
+          const displaySkillText = isFocusPlaceholder ? s.text : translateBoardString(s.text, currentLang);
+          return `<div class="skill-item${highlightClass}" data-name="${escapeHtml(name)}" data-index="${i}" title="${title}"><span class="skill-num">${i + 1}.</span>${escapeHtml(displaySkillText)}</div>`;
         }).join("")
       : "—";
 
@@ -1369,12 +1489,18 @@ function renderBoard() {
     logBoardText(data.role);
     logBoardText(data.focus);
 
+    // Translation is purely cosmetic — it only affects what's displayed
+    // here. The board text log, focus-mixing logic, and everything stored
+    // on `data` above all keep using the original, untranslated text.
+    const displayRole = translateBoardString(data.role, currentLang);
+    const displayFocus = translateFocus(data.focus, currentLang);
+
     row.innerHTML = `
       <div class="player-name${nameHighlightClass}" data-name="${escapeHtml(name)}" title="${escapeHtml(t("name_highlight_title", { name }))}">${escapeHtml(name)}</div>
       <div class="player-level ${getLevelClass(data.level)}">${escapeHtml(data.level) || "—"}</div>
       <div class="player-stats">${escapeHtml(formatStatsForDisplay(data.stats)) || "—"}</div>
-      <div class="player-role">${escapeHtml(data.role) || "—"}</div>
-      <div class="player-focus${focusClass}">${escapeHtml(data.focus) || t("unknown_focus")}</div>
+      <div class="player-role">${escapeHtml(displayRole) || "—"}</div>
+      <div class="player-focus${focusClass}">${escapeHtml(displayFocus) || t("unknown_focus")}</div>
       <div class="player-skills">${skillsHtml}</div>
     `;
 
