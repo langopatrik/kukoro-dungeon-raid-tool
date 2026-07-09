@@ -297,7 +297,6 @@ diablillo
 naga
 esqueleto
 limo
-clope
 goblin
 slime
 wolf
@@ -311,7 +310,6 @@ zombi
 cursed
 humanoides
 lobo
-rgola
 sombra
 resistenses
 jefe
@@ -330,7 +328,6 @@ Mixed (Diablillo, Naga)
 Mixed (Diablillo, Zombi)
 Mixed (Dragón, Naga)
 Mixed (Naga, Zombi)
-Mixed (A, Por)
 Mixed (Araña, Sombra)
 Mixed (Clope, Diablillo)
 Mixed (Clope, Limo)
