@@ -270,6 +270,7 @@ const BOARD_TRANSLATIONS = `
 ☀️ Paladín
 🥀 Nigromante
 🛡️ Tank
+🛡️ Tanque
 ⚔️ Warrior
 🥀 Necromancer
 Berserk
