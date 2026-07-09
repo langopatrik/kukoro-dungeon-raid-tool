@@ -204,6 +204,7 @@ minotauro
 bestias
 dragón
 zombi
+cursed
 Mixed (Esqueleto, Troll)
 Mixed (Goblin, Minotauro)
 Mixed (Shadow, Goblin)
