@@ -30,6 +30,7 @@ const FOCUS_KEYWORDS = [
   { language: "English", phrase: "tougher enemies",        focus: "tougher" },
   { language: "English", phrase: "resilient enemy",        focus: "resilient" },
   { language: "English", phrase: "humanoid enemies",        focus: "humanoid" },
+  { language: "English", phrase: "any boss",        focus: "boss" },
 
   // Spanish
   { language: "Spanish", phrase: "todos los enemigos",     focus: "todos" },
